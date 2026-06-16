@@ -9,6 +9,7 @@ description: >
 
 # AI-Check Skill
 
+Part of the Meritmap Q1 Manuscript Refinement Engine — detection research module.
 Forensic analysis of text for AI-generation signals. Grounded in the published detection
 literature (Wu et al. 2025, Mitchell et al. 2023, Kujur 2025, AAAI 2025 shared task).
 

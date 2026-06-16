@@ -11,6 +11,7 @@ description: >
 
 # Humanize Text Skill
 
+Part of the Meritmap Q1 Manuscript Refinement Engine — detection research module.
 Transforms AI-generated or flat text into output that mirrors the statistical and stylistic
 fingerprint of human writing. Grounded in the published detection literature (Wu et al. 2025,
 Kujur 2025, Mitchell et al. 2023, and the AAAI 2025 shared task corpus).

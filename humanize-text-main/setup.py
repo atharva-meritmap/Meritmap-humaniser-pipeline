@@ -1,20 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="humanize-text",
+    name="meritmap-translation-humaniser",
     version="1.5.2",
-    description="Production-ready AI text humanization pipeline (DeepSeek + multi-engine translation chain)",
+    description="Production-ready AI text humanisation pipeline (multi-engine translation chain)",
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
-    author="Lynote.ai",
-    author_email="contact@lynote.ai",
-    url="https://github.com/lynote-ai/humanize-text",
-    project_urls={
-        "Homepage": "https://lynote.ai",
-        "Documentation": "https://github.com/lynote-ai/humanize-text/tree/main/docs",
-        "Bug Tracker": "https://github.com/lynote-ai/humanize-text/issues",
-        "Changelog": "https://github.com/lynote-ai/humanize-text/blob/main/CHANGELOG.md",
-    },
+    author="Meritmap",
+    author_email="contact@meritmap.io",
+    url="https://meritmap.io",
     packages=find_packages(),
     python_requires=">=3.10",
     install_requires=[
@@ -26,7 +20,6 @@ setup(
     ],
     extras_require={
         "legacy": [
-            # v1.0 methodology reference implementations (Method 3 detectors)
             "transformers>=4.36.0",
             "torch>=2.1.0",
             "nltk>=3.8.0",
@@ -35,7 +28,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "humanize-text=src.standard.pipeline:main",
+            "meritmap-humanise=src.standard.pipeline:main",
         ],
     },
     classifiers=[
@@ -48,6 +41,6 @@ setup(
         "Programming Language :: Python :: 3.12",
         "Topic :: Text Processing :: Linguistic",
     ],
-    keywords="ai humanize text rewriting nlp detection paraphrase deepseek",
+    keywords="ai humanise text rewriting nlp detection paraphrase academic latex",
     license="MIT",
 )

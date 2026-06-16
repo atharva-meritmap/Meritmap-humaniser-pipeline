@@ -60,7 +60,7 @@ class Humanizer:
 
 # --- FastAPI app (used by Docker) ---
 
-app = FastAPI(title="AI-Humanizer API")
+app = FastAPI(title="Meritmap Humaniser API")
 
 
 class HumanizeRequest(BaseModel):

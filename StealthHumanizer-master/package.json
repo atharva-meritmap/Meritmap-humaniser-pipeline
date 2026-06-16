@@ -1,5 +1,5 @@
 {
-  "name": "stealthhumanizer",
+  "name": "meritmap-web-humaniser",
   "version": "2.2.0",
   "private": true,
   "files": [
@@ -13,8 +13,8 @@
     "node": ">=20"
   },
   "bin": {
-    "stealthhumanizer": "dist/bin/cli.js",
-    "stealth-humanize": "dist/bin/cli.js"
+    "meritmap-humanise": "dist/bin/cli.js",
+    "meritmap-humanizer": "dist/bin/cli.js"
   },
   "scripts": {
     "cli": "tsx bin/cli.ts",
@@ -70,14 +70,14 @@
     "tsx": "^4.22.4",
     "typescript": "^6.0.2"
   },
-  "description": "Free open-source AI text humanizer with style-aware rewriting",
+  "description": "Meritmap web-based AI text humaniser with style-aware multi-pass rewriting",
   "license": "MIT",
-  "author": "Rudra Sarker <rudrasarker130@gmail.com>",
+  "author": "Meritmap",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rudra496/StealthHumanizer"
+    "url": "https://github.com/atharva-meritmap/Meritmap-humaniser-pipeline"
   },
-  "homepage": "https://stealthhumanizer.vercel.app/",
+  "homepage": "https://meritmap.io",
   "keywords": [
     "ai-humanizer",
     "ai-detector",
