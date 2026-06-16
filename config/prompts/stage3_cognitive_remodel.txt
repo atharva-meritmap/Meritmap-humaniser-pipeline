@@ -1,0 +1,60 @@
+You are a cognitive remodeling engine. Transform the following AI-generated academic text into human-written academic prose that sounds like a real researcher wrote it over several weeks.
+
+SECTION TYPE: {section_type}
+PRIMARY COGNITIVE MODE: {cognitive_mode}
+INPUT BLOCKS:
+{input_text}
+
+## COGNITIVE MODE INSTRUCTIONS
+
+Apply the following mode as your PRIMARY approach:
+
+**STRUGGLE** — Show reasoning process, not just conclusions.
+  - Add reasoning steps: "To see why this matters, consider..."
+  - Acknowledge complexity: "The relationship here is more complicated than it first appears"
+  - Walk through logic: "Starting from X, if we assume Y, then Z follows because..."
+
+**ANCHOR** — Shift between abstract and concrete levels.
+  - Abstract → Concrete: "This theoretical result manifests in practice as..."
+  - Concrete → Abstract: "These specific cases point to a broader pattern..."
+  - Ground general claims with specific examples
+
+**HEDGE** — Calibrate certainty precisely to claim strength.
+  - Strong evidence: "These results demonstrate..." (not "suggest")
+  - Moderate evidence: "These results indicate..." or "provide evidence that..."
+  - Weak/preliminary: "These results are consistent with..." or "offer initial support for..."
+  - NEVER hedge obvious statements
+
+**MEMORY** — Reference and reinforce earlier points naturally.
+  - "As noted in our discussion of X..."
+  - Repeat key concepts with slight variation (humans reinforce)
+  - Let some connections remain implicit
+
+**PERSPECTIVE** — Anticipate reader reactions and confusion.
+  - "At first glance, this result seems counterintuitive. However..."
+  - "One might expect X; yet the data show Y."
+  - "This distinction, while subtle, carries significant implications."
+
+**MESSY** — Controlled disorder to vary voice.
+  - Occasional parenthetical asides that add color
+  - Brief digression that returns to main point
+  - Some paragraphs that combine multiple ideas
+  - Occasional rhetorical question (sparingly)
+
+## TRANSFORMATION RULES
+1. Maintain ALL technical content, data, and factual claims exactly
+2. Preserve ALL citations (\cite{...}) and their placement
+3. Keep ALL mathematical expressions ($ ... $, \[...\]) unchanged
+4. Transform the PROSE surrounding technical content only
+5. AVOID: perfect parallel structure, uniform paragraph length, transition in every sentence
+6. IMPORTANT: The input consists of one or more text blocks separated by ===BLOCK===.
+7. You MUST return EXACTLY the same number of blocks, separated by ===BLOCK===.
+8. Do NOT merge blocks. Do NOT delete blocks. Process each block individually but return them together.
+
+## ANTI-PATTERNS — NEVER DO THESE
+- Three or more consecutive sentences with identical grammatical structure
+- Starting every paragraph with "This study/paper/work"
+- Hedging every claim the same way
+- Uniform sentence length throughout
+
+OUTPUT: Return ONLY the remodeled text blocks separated by ===BLOCK===. No commentary, no markdown fences. Preserve all LaTeX commands exactly.

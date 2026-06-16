@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=70.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "q1-manuscript-refinement-engine"
+version = "1.0.0"
+description = "Production-grade pipeline to transform AI-generated LaTeX manuscripts into Q1-journal-ready academic papers."
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "MIT"}
+
+dependencies = [
+    # LaTeX processing (lightweight, no ML deps)
+    "TexSoup>=0.3.3",
+    "pylatexenc>=2.10,<3.0",
+
+    # NLP
+    "spacy>=3.7,<4.0",
+    "stanza>=1.8,<2.0",
+    "nltk>=3.9.3",
+
+    # Grammar
+    "language-tool-python>=2.8",
+
+    # Readability
+    "textstat>=0.7,<1.0",
+    "pytextrank>=3.3",
+
+    # Semantic validation
+    "sentence-transformers>=3.0",
+    "bert-score>=0.3.13",
+
+    # Local LLM
+    "ollama>=0.3",
+
+    # ML backbone
+    "transformers>=5.3.0",
+    "torch>=2.2",
+
+    # Core
+    "pydantic>=2.7",
+    "pyyaml>=6.0",
+    "rich>=13.7",
+    "click>=8.1",
+
+    # HTTP client for academic APIs
+    "httpx>=0.27",
+    "tenacity>=8.2",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[project.scripts]
+q1-engine = "q1_engine.main:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120

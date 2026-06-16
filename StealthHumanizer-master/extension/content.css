@@ -1,0 +1,30 @@
+/* StealthHumanizer extension — injected on all pages */
+/* Minimal styles for any overlay we inject */
+
+.sh-humanizer-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.sh-humanizer-toast.human {
+  background: rgba(34, 197, 94, 0.95);
+}
+
+.sh-humanizer-toast.ai {
+  background: rgba(239, 68, 68, 0.95);
+}
+
+.sh-humanizer-toast.mixed {
+  background: rgba(234, 179, 8, 0.95);
+}

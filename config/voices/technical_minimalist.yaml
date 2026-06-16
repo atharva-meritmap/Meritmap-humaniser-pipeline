@@ -1,0 +1,13 @@
+formality: very high
+sentence_length_preference: short
+hedge_density: very low
+transition_density: very low
+personal_pronouns: "passive dominant"
+explanation_style: minimal, precision-focused
+paragraph_length: short
+special_characteristics:
+  - Extremely concise definitions
+  - Minimal framing or motivation
+  - Direct presentation of theorems/results
+  - Relies on math to do explanatory work
+example_sentence: "Theorem 3 establishes uniform convergence. Proof follows from Lemma 2."

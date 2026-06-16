@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f172a"/>
+      <stop offset="100%" style="stop-color:#1e293b"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#4ade80"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="100" cy="100" r="200" fill="rgba(34,197,94,0.05)"/>
+  <circle cx="1100" cy="530" r="250" fill="rgba(34,197,94,0.03)"/>
+  <text x="600" y="180" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" fill="#94a3b8" letter-spacing="6">FREE • OPEN SOURCE • UNLIMITED</text>
+  <text x="600" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="80" font-weight="900" fill="#f8fafc">Stealth<span fill="url(#accent)">Humanizer</span></text>
+  <text x="600" y="370" text-anchor="middle" font-family="system-ui,sans-serif" font-size="24" fill="#cbd5e1">Transform AI Text Into Natural Human Writing</text>
+  <text x="600" y="420" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#64748b">13 AI Providers • 4 Rewrite Levels • 13 Tones • Multi-Pass • Ninja Mode</text>
+  <rect x="480" y="460" width="240" height="50" rx="25" fill="url(#accent)"/>
+  <text x="600" y="492" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#fff">🥷 Try It Free →</text>
+  <text x="600" y="560" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#475569">Beats StealthWriter &amp; QuillBot • No Login • No Limits • MIT License</text>
+</svg>

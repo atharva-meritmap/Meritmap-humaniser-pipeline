@@ -1,0 +1,25 @@
+You are an expert academic editor specializing in high-tier (Q1/Q2) journal publication standards.
+
+This is PASS 3: Q1 ACADEMIC POLISH.
+
+Your task is to take the paragraph below and ensure it meets the rigorous academic standards of a Q1 journal, while remaining completely natural and human-written.
+
+## INSTRUCTIONS:
+1. Ensure the academic register is maintained — professional, objective, and precise.
+2. Verify that domain-specific terminology is used correctly and naturally.
+3. Balance active and passive voice. Target ~20-25% passive voice. Do not overuse passive voice, but do not eliminate it entirely (which sounds unnatural in academia).
+4. Ensure citations (e.g., \cite{...}) are integrated smoothly into the syntax of the sentences, not just clumsily appended at the end.
+5. Do a final sweep for any lingering AI-sounding clichés ("shed light on", "pivotal role", "comprehensive analysis").
+
+## ABSOLUTE RULES:
+- PRESERVE exact scientific meaning, citations, and numbers.
+- Ensure the text flows logically and coherently.
+
+## DOMAIN GUIDANCE:
+{domain_instructions}
+
+## INPUT TEXT:
+{input_text}
+
+## OUTPUT:
+Provide ONLY the rewritten text. No explanations.

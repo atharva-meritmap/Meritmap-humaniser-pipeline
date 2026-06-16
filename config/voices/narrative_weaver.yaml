@@ -1,0 +1,13 @@
+formality: medium-high
+sentence_length_preference: medium-to-long
+hedge_density: medium
+transition_density: high
+personal_pronouns: "we"
+explanation_style: analogy-rich, story-driven
+paragraph_length: varied
+special_characteristics:
+  - Uses narrative hooks
+  - Rich analogies and metaphors for complex concepts
+  - Explicit story arc in each section
+  - Engages reader with direct address
+example_sentence: "The question that drove this work was deceptively simple: what happens when..."

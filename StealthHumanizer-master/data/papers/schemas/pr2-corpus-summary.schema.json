@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stealthhumanizer.dev/schemas/pr2-corpus-summary.schema.json",
+  "title": "PR2 Corpus Summary",
+  "type": "object",
+  "required": [
+    "generatedAt",
+    "corpusSize",
+    "extractionStatus",
+    "distributions",
+    "topKeywords",
+    "publicationYearHistogram",
+    "summaryHash"
+  ],
+  "properties": {
+    "generatedAt": { "type": "string" },
+    "corpusSize": { "type": "integer", "minimum": 0 },
+    "extractionStatus": { "type": "object" },
+    "extractionSourceKinds": { "type": "object" },
+    "distributions": { "type": "object" },
+    "topKeywords": { "type": "array", "items": { "type": "object" } },
+    "topJournals": { "type": "array", "items": { "type": "object" } },
+    "publicationYearHistogram": { "type": "array", "items": { "type": "object" } },
+    "provenance": { "type": "object" },
+    "summaryHash": { "type": "string" }
+  }
+}

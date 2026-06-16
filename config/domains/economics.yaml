@@ -1,0 +1,47 @@
+name: Economics
+keyword_indicators:
+  - market
+  - equilibrium
+  - utility
+  - elasticity
+  - regression
+  - GDP
+  - inflation
+  - monetary
+  - fiscal
+  - econometric
+  - panel data
+  - instrumental variable
+  - causal inference
+  - heteroscedasticity
+  - endogeneity
+  - welfare
+  - game theory
+  - auction
+  - labor
+  - trade
+
+common_sections:
+  - abstract
+  - introduction
+  - literature_review
+  - methodology
+  - results
+  - discussion
+  - conclusion
+
+writing_style:
+  formality: high
+  passive_voice_preference: low
+  citation_density: high
+  statistical_reporting: very_high
+  first_person: acceptable
+
+rewrite_instructions: |
+  - Active voice is common and acceptable in economics writing
+  - Econometric specifications must be preserved exactly
+  - Variable names and model parameters must not be altered
+  - Identification strategy must be clearly explained
+  - Robustness checks should be mentioned if present
+  - Data sources and time periods must be preserved
+  - Policy implications should be stated carefully with appropriate caveats

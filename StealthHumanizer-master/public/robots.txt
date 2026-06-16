@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://stealthhumanizer.vercel.app/sitemap.xml

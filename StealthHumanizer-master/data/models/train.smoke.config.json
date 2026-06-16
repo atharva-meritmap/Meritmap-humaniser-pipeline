@@ -1,0 +1,15 @@
+{
+  "benchmarkRowsPath": "data/papers/benchmark/current/benchmark.rows.jsonl",
+  "outputRoot": "data/models",
+  "seed": "stealthhumanizer-pr4-smoke",
+  "threshold": 0.5,
+  "learningRate": 0.03,
+  "epochs": 20,
+  "l2": 0.0005,
+  "minMetrics": {
+    "accuracy": 0.45,
+    "f1": 0.45,
+    "auroc": 0.5
+  },
+  "failOnQualityDrop": true
+}

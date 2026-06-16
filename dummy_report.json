@@ -1,0 +1,35 @@
+{
+  "assembly_status": "warnings",
+  "detection_pre_check": {
+    "perplexity_mean": 1.0,
+    "perplexity_variance": 18.6,
+    "burstiness_score": 18.6,
+    "ai_markers_found": 2,
+    "sentence_length_std": 4.1,
+    "paragraph_length_std": 21.1,
+    "transition_density": 0.0,
+    "estimated_detection_risk": "high"
+  },
+  "q1_q2_compliant": false,
+  "sections_complete": [
+    "introduction",
+    "conclusion",
+    "methodology"
+  ],
+  "sections_missing": [
+    "abstract",
+    "results",
+    "discussion"
+  ],
+  "argumentation_score": "adequate",
+  "methodology_score": "strong",
+  "total_citations": 0,
+  "verified_citations": 0,
+  "recommendations": [
+    "Detection risk HIGH - re-run Stages 3-5 with increased variation",
+    "Remaining AI markers: it is worth noting that, groundbreaking",
+    "abstract",
+    "results",
+    "discussion"
+  ]
+}

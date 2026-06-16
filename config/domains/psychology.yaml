@@ -1,0 +1,47 @@
+name: Psychology
+keyword_indicators:
+  - behavior
+  - cognition
+  - perception
+  - emotion
+  - personality
+  - psychotherapy
+  - cognitive
+  - social
+  - developmental
+  - neuropsychology
+  - participants
+  - questionnaire
+  - Likert
+  - ANOVA
+  - effect size
+  - Cohen
+  - reliability
+  - validity
+  - sample size
+  - informed consent
+
+common_sections:
+  - abstract
+  - introduction
+  - methodology
+  - results
+  - discussion
+  - conclusion
+
+writing_style:
+  formality: high
+  passive_voice_preference: moderate
+  citation_density: very_high
+  statistical_reporting: very_high
+  first_person: acceptable
+
+rewrite_instructions: |
+  - Follow APA style conventions
+  - Report all statistical tests with exact values (F, t, p, d, η²)
+  - Use "participants" not "subjects"
+  - Effect sizes must be reported alongside significance tests
+  - Hypotheses should be clearly stated in Introduction
+  - Limitations must be discussed honestly and specifically
+  - Avoid causal language for correlational designs
+  - Sample characteristics (N, demographics) must be preserved exactly

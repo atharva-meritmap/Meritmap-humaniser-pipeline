@@ -1,0 +1,26 @@
+name: Nature
+style:
+  abstract_max_words: 150
+  section_order:
+    - abstract
+    - introduction
+    - results
+    - discussion
+    - methodology
+  requires_keywords: false
+  citation_style: numeric-superscript
+  writing_conventions:
+    - Extremely concise writing — every word must earn its place
+    - Strong narrative structure — tell a story
+    - Abstract must not exceed 150 words
+    - Methods section typically comes after Discussion
+    - Results and Discussion may be combined
+    - Active voice strongly preferred
+    - Avoid jargon — accessible to broad scientific audience
+    - First person ("we") is acceptable and encouraged
+  formatting:
+    column_count: 1
+    font: Nature house style
+    max_pages: 8
+    max_references: 50
+    references_format: Nature superscript numbered

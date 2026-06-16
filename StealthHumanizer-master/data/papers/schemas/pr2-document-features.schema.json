@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stealthhumanizer.dev/schemas/pr2-document-features.schema.json",
+  "title": "PR2 Document Features Row",
+  "type": "object",
+  "required": ["id", "title", "extraction", "features", "normalizedTextHash"],
+  "properties": {
+    "id": { "type": "string" },
+    "doi": { "type": "string" },
+    "title": { "type": "string" },
+    "publicationYear": { "type": ["integer", "null"] },
+    "journal": { "type": "string" },
+    "extraction": {
+      "type": "object",
+      "required": ["status", "sourceKind", "textType", "charCount", "errors"],
+      "properties": {
+        "status": { "type": "string" },
+        "sourceKind": { "type": "string" },
+        "sourceRef": { "type": "string" },
+        "textType": { "type": "string" },
+        "charCount": { "type": "integer", "minimum": 0 },
+        "errors": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "features": {
+      "type": "object",
+      "required": ["segmentation", "tokenStats", "lexicalFeatures", "syntacticFeatures", "stylisticFeatures"],
+      "properties": {
+        "segmentation": { "type": "object" },
+        "tokenStats": { "type": "object" },
+        "lexicalFeatures": { "type": "object" },
+        "syntacticFeatures": { "type": "object" },
+        "stylisticFeatures": { "type": "object" }
+      }
+    },
+    "normalizedTextPreview": { "type": "string" },
+    "normalizedTextHash": { "type": "string" }
+  }
+}

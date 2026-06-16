@@ -1,0 +1,13 @@
+formality: medium
+sentence_length_preference: varied
+hedge_density: medium-low
+transition_density: medium
+personal_pronouns: "we"
+explanation_style: intuitive, clarifying parentheticals
+paragraph_length: varied
+special_characteristics:
+  - Sparingly uses contractions (1-2 per section)
+  - Genuine explanatory parentheticals
+  - "Think of it this way..." constructions
+  - Accessible without being informal
+example_sentence: "This optimization landscape is deceptively simple—it looks smooth from a distance, but local minima proliferate as dimensionality increases."

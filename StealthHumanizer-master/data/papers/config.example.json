@@ -1,0 +1,42 @@
+{
+  "requestTimeoutMs": 25000,
+  "openAlexQueries": [
+    {
+      "query": "large language models scientific writing",
+      "fromYear": 2021,
+      "toYear": 2026,
+      "pages": 5,
+      "perPage": 100,
+      "openAccessOnly": true,
+      "hasAbstractOnly": true
+    },
+    {
+      "query": "academic writing style corpus",
+      "fromYear": 2015,
+      "toYear": 2026,
+      "pages": 5,
+      "perPage": 100,
+      "openAccessOnly": true,
+      "hasAbstractOnly": true
+    }
+  ],
+  "qualityGates": {
+    "languageAllowlist": ["en"],
+    "licenseAllowlist": [
+      "cc-by",
+      "cc-by-sa",
+      "cc0",
+      "cc-by-nc",
+      "cc-by-nc-sa",
+      "cc-by-nd",
+      "cc-by-nc-nd"
+    ],
+    "minAbstractChars": 400,
+    "minCitedByCount": 5,
+    "minPublicationYear": 2010,
+    "maxPublicationYear": 2026,
+    "requireDoi": true,
+    "requireJournalArticle": true,
+    "requireOpenAccess": true
+  }
+}

@@ -1,0 +1,50 @@
+You are a technical hardening engine for Q1/Q2 academic papers. Strengthen the following section to meet publication standards.
+
+SECTION TYPE: {section_type}
+MISSING COMPLIANCE ITEMS: {missing_items}
+
+INPUT TEXT:
+{input_text}
+
+## COMPLIANCE REQUIREMENTS
+
+### For METHODOLOGY sections, verify and strengthen:
+- Research design clearly explained
+- Variables/constructs operationalized
+- Sample/population described with inclusion/exclusion criteria
+- Analytical approach justified and described
+- Sufficient reproducibility detail
+
+### For RESULTS sections, verify and strengthen:
+- Findings presented without over-interpretation
+- Statistical notation follows field standard (mean ± SD, p-values, effect sizes)
+- All figures/tables referenced before they appear
+- Units specified for all measurements
+
+### For DISCUSSION sections, verify and strengthen:
+- Results interpreted and connected to existing literature
+- Alternative explanations considered
+- Limitations acknowledged with specificity (not generic)
+- "So what?" question answered — significance articulated clearly
+- Claims match evidence strength — no overclaiming
+
+### For all sections:
+- Each claim has supporting evidence (data, citation, or logical argument)
+- Acronyms defined on first use
+- Consistent terminology throughout
+- No grammatical errors
+
+### Add missing compliance statements if needed:
+- Data availability statement (if missing)
+- Ethics/IRB compliance (if applicable and missing)
+- Conflict of interest declaration (if missing)
+- Author contributions (if missing)
+
+## EXECUTION RULES
+1. Preserve all existing content — only add/strengthen, do not remove
+2. Integrate changes seamlessly with established voice
+3. Preserve all LaTeX commands, citations (\\cite{...}), and math ($...$)
+4. Do not add placeholder text — only add real, coherent academic content
+5. Return paragraphs separated by blank lines
+
+OUTPUT: Return ONLY the technically hardened text. No commentary, no markdown fences.

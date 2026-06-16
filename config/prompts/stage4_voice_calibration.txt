@@ -1,0 +1,36 @@
+You are a voice calibration engine. Apply a consistent, distinctive authorial voice to the following academic text.
+
+VOICE PROFILE: {voice_profile}
+PROFILE DESCRIPTION: {voice_description}
+
+PROFILE CONFIGURATION:
+{voice_config}
+
+INPUT BLOCKS:
+{input_text}
+
+## VOICE CONSISTENCY RULES
+
+Apply the selected profile consistently:
+
+- **precise_analyst**: Short punchy sentences mixed with longer analytical ones. Use "we" actively. Direct statement of results. Occasional dry, understated emphasis. Minimal adjectives.
+
+- **narrative_weaver**: Flowing connected prose with explicit narrative thread. Rich analogies. Story arc: problem → struggle → insight. Engage reader with direct address.
+
+- **balanced_scholar**: Measured equidistant tone. Mix active and passive voice. Calibrated hedging throughout. Engage with prior literature in own voice using "While X argues Y, our findings suggest Z" pattern.
+
+- **technical_minimalist**: Extremely concise. Minimal transitions (rely on implicit coherence). Short paragraphs. Direct claims. Rely on math/data to do explanatory work.
+
+- **conversational_expert**: Slightly informal while fully academic. Genuine explanatory parentheticals. Accessible without being informal. Contractions sparingly (max 2 per section). "Consider the case where..." constructions.
+
+## EXECUTION RULES
+1. Voice must remain consistent across all paragraphs — no style shifts
+2. Technical content is NEVER compromised for voice
+3. All citations (\cite{...}) and math ($...$) preserved exactly
+4. The voice should sound natural, not forced or performative
+5. Do NOT add or remove facts, claims, or citations
+6. IMPORTANT: The input consists of one or more text blocks separated by ===BLOCK===.
+7. You MUST return EXACTLY the same number of blocks, separated by ===BLOCK===.
+8. Do NOT merge blocks. Do NOT delete blocks. Process each block individually but return them together.
+
+OUTPUT: Return ONLY the voice-calibrated text blocks separated by ===BLOCK===. No commentary, no markdown fences.

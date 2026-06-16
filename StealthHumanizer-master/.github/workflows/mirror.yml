@@ -1,0 +1,12 @@
+name: Mirror (Safe)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip mirror (safe mode)
+        run: echo "Mirror disabled to prevent failure"

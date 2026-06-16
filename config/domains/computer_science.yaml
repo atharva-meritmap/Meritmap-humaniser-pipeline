@@ -1,0 +1,51 @@
+name: Computer Science
+keyword_indicators:
+  - algorithm
+  - neural network
+  - machine learning
+  - deep learning
+  - optimization
+  - dataset
+  - benchmark
+  - architecture
+  - transformer
+  - convolutional
+  - recurrent
+  - classification
+  - regression
+  - clustering
+  - natural language processing
+  - computer vision
+  - reinforcement learning
+  - distributed systems
+  - database
+  - software engineering
+  - cybersecurity
+  - blockchain
+
+common_sections:
+  - abstract
+  - introduction
+  - related_work
+  - methodology
+  - experiments
+  - results
+  - discussion
+  - conclusion
+
+writing_style:
+  formality: high
+  passive_voice_preference: moderate
+  citation_density: high
+  statistical_reporting: moderate
+  first_person: acceptable
+
+rewrite_instructions: |
+  - Prefer active voice for describing contributions ("We propose..." not "It is proposed...")
+  - Use precise algorithmic language (complexity, convergence, optimization)
+  - Quantify all claims with specific numbers and comparisons to baselines
+  - Reference baselines explicitly in comparative statements
+  - Avoid marketing language ("groundbreaking", "revolutionary")
+  - Use standard CS terminology consistently
+  - Ensure reproducibility details are preserved (hyperparameters, seeds, hardware)
+  - Performance claims must include metrics, datasets, and comparison methods

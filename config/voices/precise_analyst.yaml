@@ -1,0 +1,13 @@
+formality: high
+sentence_length_preference: short-to-medium
+hedge_density: low
+transition_density: medium-low
+personal_pronouns: "we"
+explanation_style: direct, data-forward
+paragraph_length: shorter
+special_characteristics:
+  - Frequent use of "found", "observed", "measured" as reporting verbs
+  - Minimal adjectives and adverbs
+  - Direct statement of results without preamble
+  - Occasional extremely short sentences for emphasis
+example_sentence: "We tested three configurations. Only the adaptive method converged."

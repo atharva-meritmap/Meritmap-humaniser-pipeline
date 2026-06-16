@@ -1,0 +1,9 @@
+{
+  "inputDatasetPath": "data/papers/fixtures/smoke-papers.jsonl",
+  "outputRoot": "data/papers/analysis",
+  "localRoot": ".",
+  "fetchTimeoutMs": 20000,
+  "minExtractedChars": 120,
+  "allowNetworkFetch": false,
+  "maxDocuments": 4
+}

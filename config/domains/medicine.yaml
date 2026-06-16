@@ -1,0 +1,47 @@
+name: Medicine
+keyword_indicators:
+  - clinical trial
+  - patient
+  - diagnosis
+  - treatment
+  - placebo
+  - cohort
+  - randomized
+  - double-blind
+  - mortality
+  - morbidity
+  - biomarker
+  - therapeutic
+  - pathology
+  - pharmacology
+  - epidemiology
+  - prognosis
+  - etiology
+  - adverse event
+  - dosage
+  - efficacy
+
+common_sections:
+  - abstract
+  - introduction
+  - methodology
+  - results
+  - discussion
+  - conclusion
+
+writing_style:
+  formality: very_high
+  passive_voice_preference: high
+  citation_density: very_high
+  statistical_reporting: very_high
+  first_person: discouraged
+
+rewrite_instructions: |
+  - Use passive voice predominantly ("Patients were randomized..." not "We randomized patients...")
+  - Statistical results MUST include exact values (p-values, confidence intervals, effect sizes)
+  - Preserve CONSORT/STROBE/PRISMA reporting guidelines compliance
+  - Use standard medical terminology (MeSH terms where appropriate)
+  - Avoid causal language unless study design supports it ("associated with" vs "caused by")
+  - Include limitation acknowledgments prominently in Discussion
+  - Ethics approval and informed consent must be mentioned
+  - Drug names: use generic names, not brand names

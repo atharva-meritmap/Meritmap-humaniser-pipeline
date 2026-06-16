@@ -1,0 +1,9 @@
+{
+  "inputDatasetPath": "data/papers/fixtures/smoke-papers.jsonl",
+  "outputRoot": "data/papers/benchmark",
+  "maxPairs": 4,
+  "minTextChars": 120,
+  "allowedLabels": ["human_academic", "ai_transformed"],
+  "maxClassImbalance": 0.2,
+  "failOnValidationError": true
+}

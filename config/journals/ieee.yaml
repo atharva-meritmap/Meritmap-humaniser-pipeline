@@ -1,0 +1,27 @@
+name: IEEE
+style:
+  abstract_max_words: 250
+  section_order:
+    - abstract
+    - introduction
+    - related_work
+    - methodology
+    - experiments
+    - results
+    - discussion
+    - conclusion
+    - acknowledgments
+  requires_keywords: true
+  citation_style: numeric
+  writing_conventions:
+    - Use third person or passive voice predominantly
+    - Avoid first person in abstract
+    - Use present tense for established facts and general truths
+    - Use past tense for methodology and completed experiments
+    - Abbreviations must be defined at first use
+    - Equations should be numbered and referenced in text
+  formatting:
+    column_count: 2
+    font: Times New Roman
+    max_pages: 8
+    references_format: IEEE numbered

@@ -1,0 +1,32 @@
+{
+  "assembly_status": "warnings",
+  "detection_pre_check": {
+    "perplexity_mean": 0.0,
+    "perplexity_variance": 0.0,
+    "burstiness_score": 16.767857142857142,
+    "ai_markers_found": 1,
+    "sentence_length_std": 32.252194568430305,
+    "paragraph_length_std": 32.9151750057587,
+    "transition_density": 0.0,
+    "estimated_detection_risk": "medium"
+  },
+  "q1_q2_compliant": false,
+  "sections_complete": [
+    "results",
+    "introduction",
+    "conclusion",
+    "abstract",
+    "discussion"
+  ],
+  "sections_missing": [
+    "methodology"
+  ],
+  "argumentation_score": "adequate",
+  "methodology_score": "weak",
+  "total_citations": 16,
+  "verified_citations": 16,
+  "recommendations": [
+    "Detection risk MEDIUM - review flagged markers",
+    "methodology"
+  ]
+}

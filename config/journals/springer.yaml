@@ -1,0 +1,24 @@
+name: Springer
+style:
+  abstract_max_words: 200
+  section_order:
+    - abstract
+    - introduction
+    - related_work
+    - methodology
+    - results
+    - discussion
+    - conclusion
+    - acknowledgments
+  requires_keywords: true
+  citation_style: numeric-bracketed
+  writing_conventions:
+    - Third person preferred; first person acceptable sparingly
+    - British or American English — must be consistent throughout
+    - Avoid contractions
+    - Use past tense for experiments and present for established facts
+    - Data availability statement may be required
+  formatting:
+    column_count: 1
+    font: Computer Modern
+    references_format: Springer numbered

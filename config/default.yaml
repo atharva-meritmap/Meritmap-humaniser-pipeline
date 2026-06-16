@@ -1,0 +1,40 @@
+llm:
+  provider: ollama
+  model: "qwen2.5:14b"
+  temperature: 0.75
+  max_retries: 3
+  fallback_model: "qwen2.5:14b"
+
+semantic:
+  similarity_threshold: 0.85
+  embedding_model: all-MiniLM-L6-v2
+  bertscore_model: microsoft/deberta-xlarge-mnli
+
+nlp:
+  spacy_model: en_core_web_lg
+  stanza_processors: tokenize,pos,lemma,depparse,constituency
+
+grammar:
+  language: en-US
+  disabled_rules:
+    - WHITESPACE_RULE
+    - COMMA_PARENTHESIS_WHITESPACE
+
+readability:
+  target_flesch_score: 30
+  max_sentence_length: 45
+
+domain:
+  auto_detect: true
+  default: computer_science
+
+journal:
+  target: null
+  recommend: true
+
+apis:
+  semantic_scholar_base_url: https://api.semanticscholar.org/graph/v1
+  semantic_scholar_rate_limit: 100
+  crossref_base_url: https://api.crossref.org
+  crossref_mailto: null
+  openalex_base_url: https://api.openalex.org

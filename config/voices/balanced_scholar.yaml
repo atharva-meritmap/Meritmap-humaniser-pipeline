@@ -1,0 +1,13 @@
+formality: high
+sentence_length_preference: medium
+hedge_density: high
+transition_density: medium
+personal_pronouns: "we and passive mixed"
+explanation_style: literature-embedded, dialogic
+paragraph_length: medium
+special_characteristics:
+  - Extensive engagement with prior work in own voice
+  - "While X argues Y, our findings suggest Z" pattern
+  - Careful epistemic stance throughout
+  - Balances innovation with continuity
+example_sentence: "While Chen and colleagues (2022) emphasize the role of architectural depth, our findings complicate this picture by demonstrating that data quality exerts a stronger influence."

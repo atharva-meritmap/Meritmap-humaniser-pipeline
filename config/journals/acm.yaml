@@ -1,0 +1,28 @@
+name: ACM
+style:
+  abstract_max_words: 300
+  section_order:
+    - abstract
+    - introduction
+    - related_work
+    - methodology
+    - experiments
+    - results
+    - discussion
+    - conclusion
+    - acknowledgments
+  requires_keywords: true
+  requires_ccs_concepts: true
+  citation_style: author-year
+  writing_conventions:
+    - First person plural ("we") is acceptable and common
+    - Active voice is preferred over passive
+    - Use present tense for general claims
+    - Use past tense for experiments performed
+    - CCS concepts are required
+    - ACM reference format must be used
+  formatting:
+    column_count: 2
+    font: Linux Libertine
+    max_pages: 12
+    references_format: ACM author-year

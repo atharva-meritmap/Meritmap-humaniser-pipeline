@@ -1,0 +1,15 @@
+# Default owners
+* @rudra496
+
+# Workflows and governance
+.github/ @rudra496
+
+# Application and libraries
+app/ @rudra496
+components/ @rudra496
+lib/ @rudra496
+scripts/ @rudra496
+
+# Documentation
+docs/ @rudra496
+*.md @rudra496

@@ -1,0 +1,33 @@
+{
+  "requestTimeoutMs": 45000,
+  "openAlexQueries": [
+    {
+      "query": "",
+      "fromYear": 2020,
+      "toYear": 2026,
+      "pages": 100,
+      "perPage": 200,
+      "openAccessOnly": true,
+      "hasAbstractOnly": true
+    }
+  ],
+  "qualityGates": {
+    "languageAllowlist": ["en"],
+    "licenseAllowlist": [
+      "cc-by",
+      "cc-by-sa",
+      "cc0",
+      "cc-by-nc",
+      "cc-by-nc-sa",
+      "cc-by-nd",
+      "cc-by-nc-nd"
+    ],
+    "minAbstractChars": 200,
+    "minCitedByCount": 5,
+    "minPublicationYear": 2020,
+    "maxPublicationYear": 2026,
+    "requireDoi": false,
+    "requireJournalArticle": true,
+    "requireOpenAccess": true
+  }
+}

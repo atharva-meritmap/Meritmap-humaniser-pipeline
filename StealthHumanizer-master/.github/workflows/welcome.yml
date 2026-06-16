@@ -1,0 +1,26 @@
+name: Welcome New Contributors
+
+on:
+  pull_request_target:
+    types: [opened]
+  issues:
+    types: [opened]
+
+jobs:
+  welcome:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/first-interaction@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-message: >
+            👋 Welcome to StealthHumanizer! Thank you for opening your first issue.
+            A maintainer will review it shortly. Please include your environment
+            details and steps to reproduce if reporting a bug.
+          pr-message: >
+            👋 Welcome to StealthHumanizer! Thank you for your first pull request!
+            Please make sure CI passes and you've described your changes clearly.
+            A maintainer will review your PR soon.

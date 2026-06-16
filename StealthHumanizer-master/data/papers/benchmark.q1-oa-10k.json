@@ -1,0 +1,9 @@
+{
+  "inputDatasetPath": "data/papers/datasets/current/papers.jsonl",
+  "outputRoot": "data/papers/benchmark",
+  "maxPairs": 5000,
+  "minTextChars": 500,
+  "allowedLabels": ["human_academic", "ai_transformed"],
+  "maxClassImbalance": 0.1,
+  "failOnValidationError": true
+}

@@ -1,0 +1,47 @@
+name: Engineering
+keyword_indicators:
+  - finite element
+  - structural
+  - thermal
+  - mechanical
+  - simulation
+  - material
+  - stress
+  - strain
+  - load
+  - fatigue
+  - topology
+  - manufacturing
+  - control system
+  - signal processing
+  - power
+  - circuit
+  - antenna
+  - fluid dynamics
+  - CFD
+  - CAD
+
+common_sections:
+  - abstract
+  - introduction
+  - literature_review
+  - methodology
+  - results
+  - discussion
+  - conclusion
+
+writing_style:
+  formality: high
+  passive_voice_preference: high
+  citation_density: moderate
+  statistical_reporting: moderate
+  first_person: limited
+
+rewrite_instructions: |
+  - Use passive voice for experimental descriptions
+  - Preserve all units, dimensions, and tolerances exactly
+  - Reference standards (ISO, ASTM, IEEE) when mentioned
+  - Use precise engineering terminology
+  - Simulation parameters and boundary conditions must be preserved verbatim
+  - Material properties and specifications must remain unchanged
+  - Figures and tables are critical — preserve all cross-references

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stealthhumanizer.local/schemas/pr3-validation-report.schema.json",
+  "title": "PR3 Validation Report",
+  "type": "object",
+  "required": ["passed", "generatedAt", "thresholds", "stats", "checks"],
+  "properties": {
+    "passed": { "type": "boolean" },
+    "generatedAt": { "type": "string" },
+    "thresholds": { "type": "object" },
+    "stats": {
+      "type": "object",
+      "required": ["rowCount", "pairCount", "classCounts"],
+      "properties": {
+        "rowCount": { "type": "integer", "minimum": 0 },
+        "pairCount": { "type": "integer", "minimum": 0 },
+        "classCounts": { "type": "object" }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "passed", "details"],
+        "properties": {
+          "name": { "type": "string" },
+          "passed": { "type": "boolean" },
+          "details": { "type": "object" }
+        }
+      }
+    }
+  }
+}

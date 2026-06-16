@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stealthhumanizer.local/schemas/pr3-benchmark-row.schema.json",
+  "title": "PR3 Benchmark Row",
+  "type": "object",
+  "required": [
+    "benchmarkVersion",
+    "pairId",
+    "sampleId",
+    "label",
+    "sourceType",
+    "text",
+    "textHash",
+    "features",
+    "provenance"
+  ],
+  "properties": {
+    "benchmarkVersion": { "type": "string" },
+    "pairId": { "type": "string" },
+    "sampleId": { "type": "string" },
+    "label": {
+      "type": "string",
+      "enum": ["human_academic", "ai_transformed"]
+    },
+    "sourceType": { "type": "string" },
+    "sourceRecordId": { "type": "string" },
+    "doi": { "type": "string" },
+    "title": { "type": "string" },
+    "domain": { "type": "string" },
+    "publicationYear": { "type": ["integer", "null"] },
+    "text": { "type": "string", "minLength": 1 },
+    "textHash": { "type": "string" },
+    "features": {
+      "type": "object",
+      "required": ["humanizationSignals", "antiPatterns", "diagnostics"],
+      "properties": {
+        "humanizationSignals": { "type": "object" },
+        "antiPatterns": { "type": "object" },
+        "diagnostics": { "type": "object" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["runId", "inputDatasetPath", "transformation", "generatedAt"],
+      "properties": {
+        "runId": { "type": "string" },
+        "inputDatasetPath": { "type": "string" },
+        "transformation": { "type": "string" },
+        "generatedAt": { "type": "string" }
+      }
+    }
+  }
+}

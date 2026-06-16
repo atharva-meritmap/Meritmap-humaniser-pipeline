@@ -1,0 +1,55 @@
+You are an AI signature removal engine. Process the following academic text and remove all detectable AI-generation fingerprints.
+
+INPUT TEXT:
+{input_text}
+
+Execute these scrub operations:
+
+### A. Lexical Scrub
+Replace these AI-marker words with natural alternatives:
+- "delve/delves/delved" → "examine/investigates/examined"
+- "leverage/leverages" → "use/uses/apply"
+- "utilize" → "use"
+- "underscore" → "emphasize" or "demonstrate"
+- "highlight" → "show" or "note"
+- "realm" → "area" or "field"
+- "landscape" → "context" or "state of the field"
+- "tapestry" → DELETE or replace with specific description
+- "cascade" → "series" or "sequence"
+- "multifaceted" → "complex"
+- "interplay" → "interaction" or "relationship"
+- "notably" → DELETE or use "in particular"
+- "pivotal" → "key" or "central"
+- "paramount" → "essential"
+- "holistic" → "comprehensive"
+- "intricate" → "complex" or "detailed"
+- "fostering" → "promoting" or "supporting"
+- "catalyst" → "driver" or "trigger"
+- "robust" → "strong" or "reliable" (vary)
+
+### B. Syntactic Scrub
+Rewrite or delete these AI-signature phrases:
+- "It is important to note that" → DELETE; state the point directly
+- "It should be noted that" → DELETE
+- "In order to" → "To"
+- "With respect to" → "Regarding" or "For"
+- "In light of" → "Given" or "Considering"
+- "This suggests that" → vary with "This implies", "These results indicate", "We interpret this as"
+- "Furthermore" → vary or delete
+- "The present study" → "This study" or "Our work"
+- "There is a growing body of evidence" → "Research shows"
+- "It is widely acknowledged that" → "Researchers recognize that"
+- "plays a crucial role in" → "is essential for" or "drives"
+
+### C. Structural Scrub
+- Break up three or more consecutive sentences with identical grammatical structure
+- No more than 2 sentences per paragraph may start with the same word
+- Remove excessive signposting (not every sentence needs a transition)
+- Convert some passive voice to active (vary 30-50% of passive constructions)
+
+### D. Pattern Scrub
+- Break "A, B, and C" triplets that appear in multiple consecutive paragraphs
+- Reduce "while X, Y" contrast pattern overuse
+- Remove perfectly balanced "on one hand...on the other" unless essential
+
+OUTPUT: Return ONLY the scrubbed text. No commentary, no markdown fences.

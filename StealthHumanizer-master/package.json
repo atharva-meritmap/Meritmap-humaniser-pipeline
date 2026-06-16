@@ -1,0 +1,90 @@
+{
+  "name": "stealthhumanizer",
+  "version": "2.2.0",
+  "private": true,
+  "files": [
+    "dist",
+    "data/models/corpus-style-model.json",
+    "public/corpus-style-model.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "stealthhumanizer": "dist/bin/cli.js",
+    "stealth-humanize": "dist/bin/cli.js"
+  },
+  "scripts": {
+    "cli": "tsx bin/cli.ts",
+    "cli:build": "tsc --project tsconfig.cli.json",
+    "cli:smoke": "npm run cli -- --help && npm run cli -- detect --text \"Furthermore, it is important to note that this solution demonstrates the potential to optimize workflows.\"",
+    "test:cli": "npm run cli:build && node scripts/tests/cli.test.mjs",
+    "prepack": "npm run cli:build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "papers:ingest": "node scripts/papers/ingest-open-access.mjs",
+    "papers:version": "node scripts/papers/version-dataset.mjs",
+    "papers:analyze": "node scripts/papers/analyze-fulltext.mjs",
+    "papers:benchmark": "node scripts/papers/build-benchmark.mjs",
+    "model:train": "node scripts/model/train-framework.mjs",
+    "model:eval": "node scripts/model/evaluate-framework.mjs",
+    "test:integration": "node scripts/tests/integration-smoke.mjs",
+    "test:pr2-integrity": "node scripts/tests/pr2-integrity-schema-check.mjs",
+    "pipeline:complete": "node scripts/tests/complete-e2e.mjs",
+    "pipeline:q1-batch": "node scripts/papers/batch-download-and-train.mjs",
+    "papers:download-few": "node scripts/papers/download-few-open-source.mjs",
+    "test:download-few": "node scripts/tests/download-few-smoke.mjs",
+    "pipeline:q1-ready": "node scripts/papers/complete-ready-pipeline.mjs",
+    "pipeline:q1-ready:skip-install": "node scripts/papers/complete-ready-pipeline.mjs --skip-install",
+    "test:roadmap": "tsx scripts/tests/roadmap-features.mjs",
+    "screenshot": "node scripts/capture-screenshot.mjs",
+    "test:v1-forwarding": "node scripts/tests/v1-forwarding.test.mjs",
+    "test:security": "tsx scripts/tests/security-hardening.mjs",
+    "test": "npm run test:roadmap && npm run test:v1-forwarding && npm run test:security && npm run test:cli"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.17.0",
+    "mammoth": "^1.12.0",
+    "next": "16.2.7",
+    "pdfjs-dist": "^6.0.227",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "recharts": "^3.8.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.0",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.16",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.5.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.2.7",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.2.4",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.2"
+  },
+  "description": "Free open-source AI text humanizer with style-aware rewriting",
+  "license": "MIT",
+  "author": "Rudra Sarker <rudrasarker130@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rudra496/StealthHumanizer"
+  },
+  "homepage": "https://stealthhumanizer.vercel.app/",
+  "keywords": [
+    "ai-humanizer",
+    "ai-detector",
+    "text-rewriter",
+    "style-aware",
+    "academic-writing",
+    "nextjs",
+    "open-source"
+  ]
+}

@@ -1,0 +1,46 @@
+name: Materials Science
+keyword_indicators:
+  - alloy
+  - crystal
+  - microstructure
+  - tensile
+  - hardness
+  - polymer
+  - nanoparticle
+  - thin film
+  - diffraction
+  - spectroscopy
+  - XRD
+  - SEM
+  - TEM
+  - DSC
+  - TGA
+  - synthesis
+  - deposition
+  - annealing
+  - grain
+  - phase
+
+common_sections:
+  - abstract
+  - introduction
+  - experimental
+  - results
+  - discussion
+  - conclusion
+
+writing_style:
+  formality: high
+  passive_voice_preference: high
+  citation_density: moderate
+  statistical_reporting: moderate
+  first_person: limited
+
+rewrite_instructions: |
+  - Use passive voice for experimental procedures
+  - Preserve all material compositions, temperatures, and processing parameters exactly
+  - Characterization techniques and their parameters must not be modified
+  - Chemical formulas, crystal structures, and phase diagrams must be preserved
+  - Use IUPAC nomenclature for chemical compounds
+  - Sample preparation details are critical and must not be altered
+  - Measurement uncertainties and error bars must be preserved

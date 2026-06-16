@@ -1,0 +1,26 @@
+name: Elsevier
+style:
+  abstract_max_words: 300
+  section_order:
+    - abstract
+    - introduction
+    - literature_review
+    - methodology
+    - results
+    - discussion
+    - conclusion
+    - acknowledgments
+  requires_keywords: true
+  requires_highlights: true
+  citation_style: numeric
+  writing_conventions:
+    - Structured abstracts encouraged (Objective, Methods, Results, Conclusion)
+    - Third person preferred
+    - Highlights (3-5 bullet points) may be required
+    - Graphical abstract encouraged
+    - Use past tense for methodology; present for discussion
+    - Data availability statement required for many journals
+  formatting:
+    column_count: 1
+    font: Times New Roman
+    references_format: Elsevier numbered

@@ -1,0 +1,51 @@
+You are a structural camouflage engine. Restructure the following academic text to evade stylometric AI detection while preserving full readability and coherence.
+
+OPERATIONS NEEDED: {operations_needed}
+TARGET — paragraph length std dev: > {para_std_target} words
+TARGET — sentence length std dev: > {sent_std_target} words
+TARGET — transition word density: 8-15% of sentences
+
+INPUT BLOCKS (separated by ===BLOCK===):
+{input_text}
+
+## CAMOUFLAGE OPERATIONS
+
+### Operation 1: Paragraph Length Variation
+- Short paragraphs: 40-60 words (for emphasis or transitions)
+- Medium paragraphs: 80-120 words (standard)
+- Long paragraphs: 150-220 words (complex arguments)
+- NEVER two consecutive paragraphs within 10 words of each other
+
+### Operation 2: Sentence Length Variation
+Within each paragraph, mix:
+- Short: 8-15 words (impact statements)
+- Medium: 18-28 words (standard academic)
+- Long: 30-45 words (complex relationships)
+- Very long: 50+ words (rare — max 1-2 per section)
+
+### Operation 3: Transition Density
+- Target: 8-15% of sentences begin with an explicit transition
+- If density > 20%: remove some transitions, let topic continuity carry coherence
+- If density < 5%: add light transitions to connect ideas
+
+### Operation 4: Sentence Opening Variation
+- No more than 2 sentences per paragraph may start with the same word
+- Vary: "This", "These", "Such", "The", "However", "Although", "While", "Given", "As", subject-first
+
+### Operation 5: Subordinate Clause Variation
+- Mix: simple (30%), compound (25%), complex (35%), compound-complex (10%)
+
+### Operation 6: List Integration
+- Convert 30-50% of any bulleted/numbered lists to flowing prose
+- Use "First... Second... Finally..." or similar integration
+
+## EXECUTION RULES
+1. Never sacrifice clarity for variation
+2. Maintain logical flow between ALL paragraphs
+3. Keep ALL technical content, citations (\\cite{...}), and math ($...$) intact
+4. Preserve the established voice from Stage 4
+5. IMPORTANT: The input consists of one or more text blocks separated by ===BLOCK===.
+6. You MUST return EXACTLY the same number of blocks, separated by ===BLOCK===.
+7. Do NOT merge blocks. Do NOT delete blocks.
+
+OUTPUT: Return ONLY the restructured text blocks separated by ===BLOCK===. No commentary.

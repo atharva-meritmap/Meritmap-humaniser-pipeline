@@ -1,0 +1,31 @@
+api:
+  - changed-files:
+      - any-glob-to-any-file: "app/api/**"
+
+components:
+  - changed-files:
+      - any-glob-to-any-file: "components/**"
+
+lib:
+  - changed-files:
+      - any-glob-to-any-file: "lib/**"
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.md"
+          - "docs/**"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: ".github/workflows/**"
+
+scripts:
+  - changed-files:
+      - any-glob-to-any-file: "scripts/**"
+
+styles:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.css"
+          - "tailwind.config.ts"

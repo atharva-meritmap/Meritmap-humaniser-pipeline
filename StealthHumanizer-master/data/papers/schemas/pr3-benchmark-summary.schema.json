@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stealthhumanizer.local/schemas/pr3-benchmark-summary.schema.json",
+  "title": "PR3 Benchmark Summary",
+  "type": "object",
+  "required": [
+    "generatedAt",
+    "rowCount",
+    "pairCount",
+    "classCounts",
+    "topDomains",
+    "signalAveragesByLabel",
+    "provenance",
+    "summaryHash"
+  ],
+  "properties": {
+    "generatedAt": { "type": "string" },
+    "rowCount": { "type": "integer", "minimum": 0 },
+    "pairCount": { "type": "integer", "minimum": 0 },
+    "classCounts": { "type": "object" },
+    "topDomains": { "type": "array" },
+    "signalAveragesByLabel": { "type": "object" },
+    "provenance": { "type": "object" },
+    "summaryHash": { "type": "string" }
+  }
+}
