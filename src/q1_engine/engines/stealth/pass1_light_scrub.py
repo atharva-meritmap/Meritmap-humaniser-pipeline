@@ -26,11 +26,11 @@ class Pass1LightScrub:
             return False
             
         # Check specific signals that Pass 1 fixes
-        s_a = next((d for d in result.dimensions if "Perplexity" in d.name), None)
-        s_c = next((d for d in result.dimensions if "Hedge" in d.name), None)
-        s_f = next((d for d in result.dimensions if "Transitions" in d.name), None)
+        s_p = next((d for d in result.dimensions if "Perplexity" in d.name), None)
+        s_t = next((d for d in result.dimensions if "Transition Frequency" in d.name), None)
+        s_ai = next((d for d in result.dimensions if "AI Phrase Density" in d.name), None)
         
-        if (s_a and s_a.score < 80.0) or (s_c and s_c.score < 80.0) or (s_f and s_f.score < 80.0):
+        if (s_p and s_p.score < 80.0) or (s_t and s_t.score < 80.0) or (s_ai and s_ai.score < 80.0):
             return True
             
         return False

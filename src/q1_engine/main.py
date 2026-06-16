@@ -21,6 +21,14 @@ def main():
     parser.add_argument("-v", "--verbose", action="store_true", help="Enable debug logging")
 
     parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["8stage", "antigravity", "ultra-ninja"],
+        default="8stage",
+        help="Pipeline execution mode (default: 8stage)",
+    )
+
+    parser.add_argument(
         "--voice-profile",
         type=str,
         choices=[v.value for v in VoiceProfile],
@@ -97,7 +105,7 @@ def main():
     print(f"Stages: {pipeline.config.stages}  |  Voice: {pipeline.config.voice_profile.value}  |  Target: {pipeline.config.target_score}")
 
     try:
-        report = asyncio.run(pipeline.run(input_path, output_path, args.report_json))
+        report = asyncio.run(pipeline.run(input_path, output_path, args.report_json, mode=args.mode))
 
         print("\n=== 8-Stage Humanisation Complete ===")
         print(f"Domain: {report.domain.domain.value} ({report.domain.confidence:.2f})")

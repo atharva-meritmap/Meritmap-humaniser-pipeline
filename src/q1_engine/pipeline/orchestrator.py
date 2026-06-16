@@ -31,6 +31,7 @@ from q1_engine.engines.stages import (
 from q1_engine.engines.stealth.pass1_light_scrub import Pass1LightScrub
 from q1_engine.engines.stealth.pass2_burstiness import Pass2Burstiness
 from q1_engine.engines.stealth.pass3_ninja import Pass3Ninja
+from q1_engine.engines.stealth.pass4_ultra_ninja import Pass4UltraNinja
 from q1_engine.models import (
     ContentType,
     HumanisationReport,
@@ -107,6 +108,7 @@ class Q1Pipeline:
         self.pass1 = Pass1LightScrub(self.llm)
         self.pass2 = Pass2Burstiness(self.llm)
         self.pass3 = Pass3Ninja(self.llm)
+        self.pass4 = Pass4UltraNinja(self.llm, self.config)
         self.stage6 = Stage6TechnicalHardening(self.llm)
         self.stage7 = Stage7CitationAuth(self.llm, self.api_client)
         self.stage8 = Stage8Assembly()
@@ -145,6 +147,10 @@ class Q1Pipeline:
         # ── Antigravity mode: minimal-token single-pass humanizer ──
         if mode == "antigravity":
             return await self._run_antigravity(source, input_path, output_path, report_json_path)
+
+        # ── Ultra Ninja mode: full translation chain ──
+        if mode == "ultra-ninja":
+            return await self._run_ultra_ninja(source, input_path, output_path, report_json_path)
 
         active_stages = _parse_stages(getattr(self.config, "stages", "1-8"))
 
@@ -272,5 +278,35 @@ class Q1Pipeline:
         input_path: str | Path,
         output_path: str | Path,
         report_json_path: str | Path | None = None,
+        mode: str = "8stage",
     ) -> PublicationReport:
-        return await self.process_file(input_path, output_path, report_json_path)
+        return await self.process_file(input_path, output_path, report_json_path, mode=mode)
+
+    async def _run_ultra_ninja(self, source: str, input_path: Path, output_path: Path, report_json_path: str | Path | None) -> PublicationReport:
+        """Run the 4-step translation chain (Ultra Ninja mode)."""
+        doc, sections, r1 = self.stage1.run(source)
+        domain_profile = self.domain_detector.detect(sections)
+        original_text = self._collect_text(sections)
+        baseline_ai = self.ai_scorer.score(original_text)
+        
+        log.info("Running Pass 4: Ultra Ninja on %d sections", len(sections))
+        r_ninja = await self.pass4.run(sections)
+        
+        final_latex, quality_report, r8 = self.stage8.run(doc, sections, [r1, r_ninja])
+        
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(final_latex, encoding="utf-8")
+        
+        final_text = self._collect_text(sections, rewritten=True)
+        final_ai = self.ai_scorer.score(final_text)
+        
+        humanisation_report = HumanisationReport(
+            before=baseline_ai,
+            after=final_ai,
+            humanisation_grade=_grade(final_ai.human_score)
+        )
+        return PublicationReport(
+            domain=domain_profile,
+            humanisation=humanisation_report,
+            summary="Ultra Ninja translation chain applied."
+        )

@@ -27,10 +27,10 @@ class Pass2Burstiness:
             
         # Check specific signals that Pass 2 fixes
         s_b = next((d for d in result.dimensions if "Burstiness" in d.name), None)
-        s_d = next((d for d in result.dimensions if "Structural" in d.name), None)
-        s_g = next((d for d in result.dimensions if "Punctuation" in d.name), None)
+        s_sv = next((d for d in result.dimensions if "Sentence Length Variation" in d.name), None)
+        s_ss = next((d for d in result.dimensions if "Sentence Start Diversity" in d.name), None)
         
-        if (s_b and s_b.score < 80.0) or (s_d and s_d.score < 80.0) or (s_g and s_g.score < 80.0):
+        if (s_b and s_b.score < 80.0) or (s_sv and s_sv.score < 80.0) or (s_ss and s_ss.score < 80.0):
             return True
             
         return False

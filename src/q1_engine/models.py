@@ -614,6 +614,7 @@ class APIConfig(BaseModel):
     crossref_base_url: str = "https://api.crossref.org"
     crossref_mailto: str | None = None
     openalex_base_url: str = "https://api.openalex.org"
+    niutrans_api_key: str | None = None
 
 
 class PipelineConfig(BaseModel):
