@@ -9,7 +9,13 @@ import math
 import re
 from collections import Counter
 
-from q1_engine.models import AIDetectionResult, DimensionScore, DetectionPreCheck
+from q1_engine.models import (
+    AIDetectionResult,
+    DimensionName,
+    DimensionPolarity,
+    DimensionScore,
+    DetectionPreCheck,
+)
 from q1_engine.utils.logging_setup import get_logger
 
 log = get_logger("ai_detection_scorer")
@@ -17,66 +23,91 @@ log = get_logger("ai_detection_scorer")
 _SENT_SPLIT = re.compile(r"(?<=[.!?])\s+(?=[A-Z])")
 _WORD_SPLIT = re.compile(r"\b\w+\b")
 
-AI_PHRASES = [
+# ---------------------------------------------------------------------------
+# Phrase lists — two tiers based on empirical likelihood ratio
+# ---------------------------------------------------------------------------
+
+# Tier 1: AI-exclusive clichés.
+# These phrases are near-absent in human academic writing and highly diagnostic
+# of LLM output. Penalised heavily in the sentence scorer.
+_AI_CLICHES: list[str] = [
     'it is important to note', 'it is worth mentioning', 'it is worth noting',
+    'it is crucial to note', 'it is essential to note',
     'in conclusion', 'in summary', 'to summarize', 'to conclude',
-    'furthermore', 'moreover', 'additionally', 'in addition',
     'it is crucial', 'it is essential', 'it is imperative',
     'plays a crucial role', 'plays an important role', 'plays a pivotal role',
     'has the potential to', 'it is evident that', 'it is clear that',
-    'demonstrates the', 'illustrates the', 'showcases the',
-    'underscores the', 'highlights the', 'emphasizes the',
-    'on the other hand', 'in terms of', 'when it comes to',
+    'it showcases', 'underscores the importance', 'highlights the importance',
     'as previously mentioned', 'as discussed earlier', 'as noted above',
     'it should be noted', 'it must be noted', 'needless to say',
     'last but not least', 'first and foremost', 'at the end of the day',
     'in today\'s world', 'in this day and age', 'in the modern era',
     'in the contemporary landscape', 'in the current landscape',
-    'a myriad of', 'delve into', 'delves into',
+    'a myriad of', 'delve into', 'delves into', 'delved into',
     'tapestry of', 'navigating the landscape',
-    'multifaceted', 'robust', 'seamless', 'streamline',
-    'synergy', 'paradigm', 'paradigm shift', 'holistic',
-    'innovative', 'cutting-edge', 'state-of-the-art', 'groundbreaking',
-    'transformative', 'comprehensive', 'unprecedented',
-    'utilize', 'facilitate', 'optimize', 'leverage',
-    'implement', 'foster', 'cultivate', 'empower',
+    'multifaceted', 'seamless', 'synergy', 'paradigm shift', 'holistic',
+    'groundbreaking', 'transformative', 'unprecedented',
+    'leverage', 'foster', 'cultivate', 'empower',
     'embark on a journey', 'sheds light on', 'brings to the forefront',
+    'in the realm of', 'it is worth noting that',
 ]
 
-AI_SENTENCE_STARTERS = [
-    'In this article', 'This paper', 'This study', 'This research',
-    'The results', 'The findings', 'The analysis', 'The data',
-    'It is widely', 'It is commonly', 'There is a',
-    'One of the', 'Another important', 'A key aspect',
-    'The importance of', 'The significance of', 'The role of',
-    'Research has shown', 'Studies have shown', 'Evidence suggests',
+# Tier 2: Domain-neutral verbs.
+# These appear with comparable frequency in both human academic writing and
+# AI-generated text. They are NOT diagnostic at the sentence level and must
+# NOT be penalised here. Stage 2 (fingerprint scrub) handles them at the
+# document level using context-aware regex replacements.
+_DOMAIN_NEUTRAL_VERBS: frozenset[str] = frozenset([
+    'implement', 'implements', 'implemented', 'implementing',
+    'facilitate', 'facilitates', 'facilitated', 'facilitating',
+    'optimize', 'optimizes', 'optimized', 'optimizing',
+    'integrate', 'integrates', 'integrated', 'integrating',
+    'evaluate', 'evaluates', 'evaluated', 'evaluating',
+    'utilize', 'utilizes', 'utilized', 'utilizing',
+    'comprehensive', 'robust', 'innovative', 'cutting-edge',
+    'state-of-the-art', 'streamline', 'demonstrate',
+])
+
+# Kept for the document-level AI_PHRASE_DENSITY dimension (not sentence scorer)
+AI_PHRASES: list[str] = _AI_CLICHES
+
+# AI sentence starters — only patterns that are truly AI-exclusive.
+# Removed: 'This paper', 'This study', 'The results', 'The data',
+# 'The analysis', 'The findings' — all are routine in human academic writing.
+_AI_SENTENCE_STARTERS: list[str] = [
+    'It is widely accepted', 'It is commonly believed',
+    'It is widely known', 'It is commonly understood',
+    'Needless to say', 'It goes without saying',
+    'In today\'s rapidly', 'In the ever-evolving',
 ]
+
+# Keep the old name for backward compatibility in other modules
+AI_SENTENCE_STARTERS = _AI_SENTENCE_STARTERS
 
 HEDGING_PHRASES = [
     'it could be argued', 'one might consider', 'it is possible that',
-    'it would seem', 'this suggests that', 'this may indicate',
+    'it would seem', 'this may indicate',
     'it appears that', 'this could potentially', 'one could argue',
 ]
 
 QUANTIFIERS = [
-    'numerous', 'various', 'multiple', 'several', 'a variety of',
-    'a multitude of', 'a range of', 'a number of', 'countless',
-    'a vast array of', 'a wide range of', 'a significant number of',
+    'a myriad of', 'a multitude of', 'a vast array of',
+    'a wide range of', 'countless', 'a significant number of',
 ]
 
 TRANSITION_WORDS = [
     'however', 'therefore', 'moreover', 'furthermore', 'additionally',
     'consequently', 'nevertheless', 'meanwhile', 'subsequently', 'thus',
     'hence', 'accordingly', 'similarly', 'likewise', 'conversely',
-    'otherwise', 'instead', 'rather', 'yet', 'still', 'moreover',
+    'otherwise', 'instead', 'rather', 'yet', 'still',
 ]
 
 HUMAN_INDICATORS = [
-    'basically', 'actually', 'literally', 'honestly', 'like',
-    'you know', 'I mean', 'kind of', 'sort of', 'pretty much',
+    'basically', 'actually', 'honestly',
+    'I mean', 'kind of', 'sort of', 'pretty much',
     'I think', 'I feel like', 'I guess', 'I\'d say', 'to be honest',
     'weirdly', 'interestingly', 'funnily enough', 'surprisingly',
-    'anyway', 'so yeah', 'I dunno', 'tbh', 'imo',
+    'anyway', 'tbh', 'imo',
 ]
 
 class AIDetectionScorer:
@@ -92,173 +123,211 @@ class AIDetectionScorer:
         return [w.lower() for w in _WORD_SPLIT.findall(text)]
 
     def _analyze_sentence(self, sentence: str) -> dict:
+        """Score a single sentence on the human-writing scale (0=AI, 100=human).
+
+        Design principles:
+        - Baseline 70: a plain academic sentence with no markers is above neutral.
+          Research papers are mostly clean prose interrupted by occasional AI clichés.
+        - Per-category caps: no single category can collapse a sentence to 0.
+          Prevents compounding false positives from dominating the average.
+        - Only Tier-1 clichés (AI-exclusive) penalised here. Domain-neutral verbs
+          (implement, facilitate, optimize) are NOT penalised — they have near-equal
+          frequency in human CS writing and LLM output, making them non-diagnostic
+          at sentence level.
+        - Passive voice NOT penalised: ~25-40% of sentences in published CS papers
+          use passive constructions (methods sections in particular). Penalising it
+          would systematically bias against the most common academic register.
+        - Length penalty: only for genuinely excessive sentences (>50 words).
+          Academic sentences average 22-28 words; penalising >25 would punish normal.
+        """
         issues = []
-        score = 35.0
         lower = sentence.lower()
-
-        ai_phrase_count = sum(1 for p in AI_PHRASES if p in lower)
-        if ai_phrase_count > 0:
-            issues.append(f"AI phrases: {ai_phrase_count}")
-            score -= ai_phrase_count * 22
-
-        for starter in AI_SENTENCE_STARTERS:
-            if lower.startswith(starter.lower()):
-                score -= 12
-                issues.append("AI-like sentence opener")
-
         words = self._get_words(sentence)
         word_count = len(words)
-        if word_count > 35:
-            issues.append("Very long sentence")
-            score -= 18
-        if word_count > 25:
-            issues.append("Long sentence")
-            score -= 8
-        if 2 <= word_count <= 5:
-            score += 5
 
-        if re.search(r'\b(utilize|implement|facilitate|leverage|foster|cultivate|empower)\b', sentence, re.I):
-            issues.append('Formal/AI vocabulary')
+        # --- Baseline: a neutral academic sentence starts at 70 ---
+        score = 70.0
+
+        # --- Tier-1 AI cliché penalty (cap: -30 max) ---
+        cliche_hits = sum(1 for p in _AI_CLICHES if p in lower)
+        if cliche_hits:
+            penalty = min(cliche_hits * 18, 30)
+            score -= penalty
+            issues.append(f"AI clichés:{cliche_hits}")
+
+        # --- AI-exclusive sentence starters (cap: -15 max) ---
+        starter_hit = any(lower.startswith(s.lower()) for s in _AI_SENTENCE_STARTERS)
+        if starter_hit:
             score -= 15
+            issues.append("AI opener")
 
-        if re.search(r'\b(is|are|was|were|been|being)\s+\w+ed\b', sentence, re.I):
-            issues.append('Passive voice')
-            score -= 8
+        # --- Excessive hedging (cap: -10 max) ---
+        hedge_hits = sum(1 for h in HEDGING_PHRASES if h in lower)
+        if hedge_hits:
+            penalty = min(hedge_hits * 8, 10)
+            score -= penalty
+            issues.append(f"hedging:{hedge_hits}")
 
-        for h in HEDGING_PHRASES:
-            if h in lower:
-                issues.append('Hedging language')
-                score -= 10
+        # --- Vague quantifiers (cap: -8 max) ---
+        quant_hits = sum(1 for q in QUANTIFIERS if q in lower)
+        if quant_hits:
+            penalty = min(quant_hits * 5, 8)
+            score -= penalty
+            issues.append(f"quantifiers:{quant_hits}")
 
-        for q in QUANTIFIERS:
-            if q in lower:
-                score -= 6
+        # --- Sentence length: only penalise genuinely excessive sentences ---
+        # Academic CS papers average 22-28 words/sentence (Swales & Feak 2012).
+        # A 50-word sentence is two standard deviations above that mean.
+        if word_count > 60:
+            score -= 10
+            issues.append("excessive length")
+        elif word_count > 50:
+            score -= 5
+            issues.append("very long")
 
-        human_signals = sum(1 for h in HUMAN_INDICATORS if h in lower)
-        score += human_signals * 0.5
-
-        if re.search(r"\b(I|me|my|we|us|our)\b", sentence, re.I):
-            score += 1
-        if re.search(r"\byou\b", sentence, re.I):
-            score += 0.5
-        if sentence.endswith('?'): score += 1
-        if sentence.endswith('!'): score += 1
-        if '—' in sentence or ' - ' in sentence: score += 1
-        if '(' in sentence and ')' in sentence: score += 1
-        if re.search(r"^(and|but|so|because|also|plus|or|well|ok|hey)\b", sentence, re.I):
-            score += 1
-
-        if 10 <= word_count <= 25 and re.search(r"[.!?]$", sentence):
-            if all(re.match(r"^[\w,.!?]+$", w) for w in sentence.split()):
-                issues.append("Uniform structure")
-                score -= 18
+        # --- Positive signals ---
+        # First-person plural is a strong human-writing signal in CS papers
+        if re.search(r"\b(we|us|our)\b", sentence, re.I):
+            score += 4
+        # Parenthetical asides indicate natural authorial voice
+        if '(' in sentence and ')' in sentence:
+            score += 3
+        # Em-dashes and inline dashes signal prose rhythm
+        if '—' in sentence or ' - ' in sentence:
+            score += 2
+        # Conjunctive sentence openers (informal but common in good writing)
+        if re.search(r"^(and|but|so|because|also|or|yet)\b", sentence, re.I):
+            score += 3
+        # Short punchy sentences are distinctly human
+        if 3 <= word_count <= 7:
+            score += 5
+        # Questions indicate engagement
+        if sentence.endswith('?'):
+            score += 3
 
         return {
-            "score": max(0, min(100, score)),
-            "issues": issues
+            "score": max(0.0, min(100.0, score)),
+            "issues": issues,
         }
 
     def _calc_perplexity(self, text: str, words: list[str]) -> DimensionScore:
         if len(words) < 5:
-            return DimensionScore(name="Perplexity", score=50.0, weight=0.15, detail="Too short")
-            
+            return DimensionScore(name=DimensionName.PERPLEXITY, score=50.0, weight=0.15,
+                                  polarity=DimensionPolarity.HUMAN_POSITIVE, detail="Too short")
         freq = Counter(words)
         max_freq = max(freq.values())
         avg_freq = len(words) / len(freq)
         uniformity = max_freq / avg_freq
-        
         bigrams = [f"{words[i]} {words[i+1]}" for i in range(len(words)-1)]
         bigram_freq = Counter(bigrams)
         bigram_diversity = len(bigram_freq) / len(bigrams) if bigrams else 0
-        
         score = (bigram_diversity * 60) + ((100 - uniformity * 15) * 0.4)
         score = max(0, min(100, score))
-        return DimensionScore(name="Perplexity", score=score, weight=0.15, detail=f"Div:{bigram_diversity:.2f} Unif:{uniformity:.2f}")
+        return DimensionScore(name=DimensionName.PERPLEXITY, score=score, weight=0.15,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE,
+                              detail=f"Div:{bigram_diversity:.2f} Unif:{uniformity:.2f}")
 
     def _calc_burstiness(self, sentences: list[str]) -> DimensionScore:
         if len(sentences) < 3:
-            return DimensionScore(name="Burstiness", score=50.0, weight=0.15, detail="Too short")
-            
+            return DimensionScore(name=DimensionName.BURSTINESS, score=50.0, weight=0.15,
+                                  polarity=DimensionPolarity.HUMAN_POSITIVE, detail="Too short")
         lengths = [len(self._get_words(s)) for s in sentences]
         avg = sum(lengths) / len(lengths)
         variance = sum((l - avg)**2 for l in lengths) / len(lengths)
         std_dev = math.sqrt(variance)
         burstiness = (std_dev / avg) * 100 if avg > 0 else 0
         score = max(0, min(100, burstiness * 2.5))
-        return DimensionScore(name="Burstiness", score=score, weight=0.15, detail=f"StdDev:{std_dev:.1f} Avg:{avg:.1f}")
+        return DimensionScore(name=DimensionName.BURSTINESS, score=score, weight=0.15,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE,
+                              detail=f"StdDev:{std_dev:.1f} Avg:{avg:.1f}")
 
     def _calc_vocab_diversity(self, words: list[str]) -> DimensionScore:
         valid_words = [w for w in words if len(w) > 2]
         if len(valid_words) < 10:
-            return DimensionScore(name="Vocabulary Diversity", score=50.0, weight=0.05, detail="Too short")
-            
+            return DimensionScore(name=DimensionName.VOCAB_DIVERSITY, score=50.0, weight=0.05,
+                                  polarity=DimensionPolarity.HUMAN_POSITIVE, detail="Too short")
         div = (len(set(valid_words)) / len(valid_words)) * 100
-        return DimensionScore(name="Vocabulary Diversity", score=div, weight=0.05, detail=f"Div:{div:.1f}%")
+        return DimensionScore(name=DimensionName.VOCAB_DIVERSITY, score=div, weight=0.05,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE, detail=f"Div:{div:.1f}%")
 
     def _calc_sentence_length_variation(self, sentences: list[str]) -> DimensionScore:
         if len(sentences) < 3:
-            return DimensionScore(name="Sentence Length Variation", score=50.0, weight=0.08, detail="Too short")
-            
+            return DimensionScore(name=DimensionName.SENTENCE_LENGTH_VAR, score=50.0, weight=0.08,
+                                  polarity=DimensionPolarity.HUMAN_POSITIVE, detail="Too short")
         lengths = [len(self._get_words(s)) for s in sentences]
         maximum = max(lengths)
         minimum = min(lengths)
         avg = sum(lengths) / len(lengths)
         val = ((maximum - minimum) / avg) * 60 if avg > 0 else 0
         score = max(0, min(100, val))
-        return DimensionScore(name="Sentence Length Variation", score=score, weight=0.08, detail=f"Max:{maximum} Min:{minimum}")
+        return DimensionScore(name=DimensionName.SENTENCE_LENGTH_VAR, score=score, weight=0.08,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE,
+                              detail=f"Max:{maximum} Min:{minimum}")
 
     def _calc_transition_frequency(self, words: list[str]) -> DimensionScore:
+        """Higher raw score = more AI-marker transitions. Polarity=AI_RISK."""
         if len(words) < 10:
-            return DimensionScore(name="Transition Frequency", score=50.0, weight=0.08, detail="Too short")
-            
+            return DimensionScore(name=DimensionName.TRANSITION_FREQUENCY, score=50.0, weight=0.08,
+                                  polarity=DimensionPolarity.AI_RISK, detail="Too short")
         count = sum(1 for w in words if w in TRANSITION_WORDS)
         score = max(0, min(100, (count / len(words)) * 1000))
-        return DimensionScore(name="Transition Frequency", score=score, weight=0.08, detail=f"Count:{count}")
+        return DimensionScore(name=DimensionName.TRANSITION_FREQUENCY, score=score, weight=0.08,
+                              polarity=DimensionPolarity.AI_RISK, detail=f"Count:{count}")
 
     def _calc_passive_voice(self, sentences: list[str]) -> DimensionScore:
+        """Higher raw score = more passive constructions. Polarity=AI_RISK."""
         if len(sentences) < 2:
-            return DimensionScore(name="Passive Voice", score=50.0, weight=0.05, detail="Too short")
-            
-        count = 0
-        for s in sentences:
-            if re.search(r"\b(is|are|was|were|been|being)\s+\w+(ed|en)\b", s, re.I):
-                count += 1
+            return DimensionScore(name=DimensionName.PASSIVE_VOICE, score=50.0, weight=0.05,
+                                  polarity=DimensionPolarity.AI_RISK, detail="Too short")
+        count = sum(
+            1 for s in sentences
+            if re.search(r"\b(is|are|was|were|been|being)\s+\w+(ed|en)\b", s, re.I)
+        )
         score = max(0, min(100, (count / len(sentences)) * 100))
-        return DimensionScore(name="Passive Voice", score=score, weight=0.05, detail=f"Count:{count}")
+        return DimensionScore(name=DimensionName.PASSIVE_VOICE, score=score, weight=0.05,
+                              polarity=DimensionPolarity.AI_RISK, detail=f"Count:{count}")
 
     def _calc_ai_phrase_density(self, text: str, sentences: list[str]) -> DimensionScore:
+        """Higher raw score = denser AI-marker phrases. Polarity=AI_RISK."""
         lower = text.lower()
         count = sum(1 for p in AI_PHRASES if p in lower)
         score = max(0, min(100, (count / max(len(sentences), 1)) * 20))
-        return DimensionScore(name="AI Phrase Density", score=score, weight=0.12, detail=f"Count:{count}")
+        return DimensionScore(name=DimensionName.AI_PHRASE_DENSITY, score=score, weight=0.12,
+                              polarity=DimensionPolarity.AI_RISK, detail=f"Count:{count}")
 
     def _calc_sentence_start_diversity(self, sentences: list[str]) -> DimensionScore:
         if len(sentences) < 4:
-            return DimensionScore(name="Sentence Start Diversity", score=50.0, weight=0.05, detail="Too short")
-            
+            return DimensionScore(name=DimensionName.SENTENCE_START_DIVERSITY, score=50.0, weight=0.05,
+                                  polarity=DimensionPolarity.HUMAN_POSITIVE, detail="Too short")
         starters = [self._get_words(s)[0] for s in sentences if self._get_words(s)]
         if not starters:
-            return DimensionScore(name="Sentence Start Diversity", score=50.0, weight=0.05, detail="No starters")
-            
+            return DimensionScore(name=DimensionName.SENTENCE_START_DIVERSITY, score=50.0, weight=0.05,
+                                  polarity=DimensionPolarity.HUMAN_POSITIVE, detail="No starters")
         score = (len(set(starters)) / len(starters)) * 100
-        return DimensionScore(name="Sentence Start Diversity", score=score, weight=0.05, detail=f"Div:{score:.1f}%")
+        return DimensionScore(name=DimensionName.SENTENCE_START_DIVERSITY, score=score, weight=0.05,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE, detail=f"Div:{score:.1f}%")
 
     def _calc_pronoun_usage(self, words: list[str]) -> DimensionScore:
         pronouns = {'i', 'me', 'my', 'we', 'us', 'our', 'you', 'your'}
         count = sum(1 for w in words if w in pronouns)
         score = max(0, min(100, (count / max(len(words), 1)) * 500))
-        return DimensionScore(name="Pronoun Usage", score=score, weight=0.03, detail=f"Count:{count}")
+        return DimensionScore(name=DimensionName.PRONOUN_USAGE, score=score, weight=0.03,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE, detail=f"Count:{count}")
 
     def _calc_hedging_frequency(self, text: str) -> DimensionScore:
+        """Higher raw score = more over-hedging. Polarity=AI_RISK."""
         lower = text.lower()
         count = sum(1 for h in HEDGING_PHRASES if h in lower)
         score = max(0, min(100, count * 15))
-        return DimensionScore(name="Hedging Frequency", score=score, weight=0.03, detail=f"Count:{count}")
+        return DimensionScore(name=DimensionName.HEDGING_FREQUENCY, score=score, weight=0.03,
+                              polarity=DimensionPolarity.AI_RISK, detail=f"Count:{count}")
 
     def _calc_quantifier_overuse(self, lower: str) -> DimensionScore:
+        """Higher raw score = more vague quantifiers. Polarity=AI_RISK."""
         count = sum(1 for q in QUANTIFIERS if q in lower)
         score = max(0, min(100, count * 10))
-        return DimensionScore(name="Quantifier Overuse", score=score, weight=0.02, detail=f"Count:{count}")
+        return DimensionScore(name=DimensionName.QUANTIFIER_OVERUSE, score=score, weight=0.02,
+                              polarity=DimensionPolarity.AI_RISK, detail=f"Count:{count}")
 
     def _calculate_grade(self, score: float) -> str:
         if score >= 95: return "A+"
@@ -315,7 +384,8 @@ class AIDetectionScorer:
         sent_results = [self._analyze_sentence(s) for s in sentences]
         sent_avg = sum(r['score'] for r in sent_results) / len(sent_results) if sent_results else 50.0
         
-        d_sa = DimensionScore(name="Sentence Avg", score=sent_avg, weight=0.25, detail="")
+        d_sa = DimensionScore(name=DimensionName.SENTENCE_AVG, score=sent_avg, weight=0.25,
+                              polarity=DimensionPolarity.HUMAN_POSITIVE, detail="")
         d_p = self._calc_perplexity(text, words)
         d_b = self._calc_burstiness(sentences)
         d_v = self._calc_vocab_diversity(words)
@@ -327,26 +397,16 @@ class AIDetectionScorer:
         d_pu = self._calc_pronoun_usage(words)
         d_hf = self._calc_hedging_frequency(text)
         d_qo = self._calc_quantifier_overuse(lower)
-        
-        # Composite score
-        composite = (
-            d_sa.score * d_sa.weight +
-            d_p.score * d_p.weight +
-            d_b.score * d_b.weight +
-            d_v.score * d_v.weight +
-            d_sv.score * d_sv.weight +
-            (100 - d_tf.score) * d_tf.weight +
-            (100 - d_pv.score) * d_pv.weight +
-            (100 - d_ai.score) * d_ai.weight +
-            d_ss.score * d_ss.weight +
-            d_pu.score * d_pu.weight +
-            (100 - d_hf.score) * d_hf.weight +
-            (100 - d_qo.score) * d_qo.weight
-        )
+
+        dimensions = [d_sa, d_p, d_b, d_v, d_sv, d_tf, d_pv, d_ai, d_ss, d_pu, d_hf, d_qo]
+
+        # Each dimension's human_contribution() handles polarity internally.
+        # No (100 - score) expressions here — inversion lives on the object.
+        composite = sum(d.human_contribution() * d.weight for d in dimensions)
         
         return AIDetectionResult(
             human_score=round(composite, 1),
             grade=self._calculate_grade(composite),
             estimated_ai_fraction=round(100.0 - composite, 1),
-            dimensions=[d_sa, d_p, d_b, d_v, d_sv, d_tf, d_pv, d_ai, d_ss, d_pu, d_hf, d_qo]
+            dimensions=dimensions,
         )

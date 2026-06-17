@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from q1_engine.engines.llm_rewriter import LLMRewriter
-from q1_engine.models import ContentType, Section, StageResult
+from q1_engine.models import ContentType, DimensionName, Section, StageResult
 from q1_engine.scoring.ai_detection_scorer import AIDetectionScorer
 from q1_engine.utils.logging_setup import get_logger
 
@@ -18,22 +18,20 @@ class Pass2Burstiness:
         self._scorer = AIDetectionScorer()
 
     def _block_needs_burstiness(self, text: str) -> bool:
-        """Check if block needs Pass 2 (Score still < 80 due to Burstiness/Structure)."""
+        """Return True if this block needs Pass 2 (Signal B / D / G work).
+
+        Delegates all polarity logic to DimensionScore.needs_improvement().
+        The gate never needs to know whether a metric is AI_RISK or HUMAN_POSITIVE.
+        """
         result = self._scorer.score(text)
-        
-        # If it's already perfect, skip
         if result.human_score >= 80.0:
             return False
-            
-        # Check specific signals that Pass 2 fixes
-        s_b = next((d for d in result.dimensions if "Burstiness" in d.name), None)
-        s_sv = next((d for d in result.dimensions if "Sentence Length Variation" in d.name), None)
-        s_ss = next((d for d in result.dimensions if "Sentence Start Diversity" in d.name), None)
-        
-        if (s_b and s_b.score < 80.0) or (s_sv and s_sv.score < 80.0) or (s_ss and s_ss.score < 80.0):
-            return True
-            
-        return False
+        dims = {d.name: d for d in result.dimensions}
+        return (
+            dims[DimensionName.BURSTINESS].needs_improvement(threshold=60.0)
+            or dims[DimensionName.SENTENCE_LENGTH_VAR].needs_improvement(threshold=60.0)
+            or dims[DimensionName.SENTENCE_START_DIVERSITY].needs_improvement(threshold=60.0)
+        )
 
     async def run(self, sections: list[Section]) -> StageResult:
         """Apply Pass 2 ONLY to blocks that fail Signals B, D, or G."""

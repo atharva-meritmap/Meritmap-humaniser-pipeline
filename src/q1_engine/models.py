@@ -352,12 +352,73 @@ class ReviewerReport(BaseModel):
 # Humanisation Scoring (AI Detection Bypass)
 # ---------------------------------------------------------------------------
 
+class DimensionPolarity(str, enum.Enum):
+    """Whether a dimension's raw score represents human-like quality or AI-risk.
+
+    HUMAN_POSITIVE: score=100 means maximally human. Used directly in the composite.
+    AI_RISK:        score=100 means maximally AI-like. Inverted (100-score) in the composite.
+
+    Every DimensionScore carries its own polarity so that composite scoring and
+    pass-gate logic never need to remember the direction of each metric by heart.
+    Forgetting is the root cause of semantic inversion bugs.
+    """
+    HUMAN_POSITIVE = "human_positive"
+    AI_RISK = "ai_risk"
+
+
+class DimensionName(str, enum.Enum):
+    """Canonical identifiers for every AI-detection dimension.
+
+    Using an enum as the single source of truth prevents the free-text
+    name strings from silently diverging between the scorer (producer),
+    the pass gates (consumers), and the CLI display (consumer).
+    """
+    SENTENCE_AVG = "Sentence Avg"
+    PERPLEXITY = "Perplexity"
+    BURSTINESS = "Burstiness"
+    VOCAB_DIVERSITY = "Vocabulary Diversity"
+    SENTENCE_LENGTH_VAR = "Sentence Length Variation"
+    TRANSITION_FREQUENCY = "Transition Frequency"
+    PASSIVE_VOICE = "Passive Voice"
+    AI_PHRASE_DENSITY = "AI Phrase Density"
+    SENTENCE_START_DIVERSITY = "Sentence Start Diversity"
+    PRONOUN_USAGE = "Pronoun Usage"
+    HEDGING_FREQUENCY = "Hedging Frequency"
+    QUANTIFIER_OVERUSE = "Quantifier Overuse"
+
+
 class DimensionScore(BaseModel):
-    """Score for a single humanisation dimension."""
-    name: str
-    score: float  # 0-100
+    """Score for a single humanisation dimension.
+
+    Use `human_contribution()` everywhere instead of reading `.score` directly.
+    That method applies polarity inversion automatically, so composite scoring
+    and pass gates both operate on the same human-scale value (0=AI, 100=human)
+    regardless of how the underlying metric was measured.
+    """
+    name: DimensionName
+    score: float        # raw value 0-100; direction depends on polarity
     weight: float = 0.0
     detail: str = ""
+    polarity: DimensionPolarity = DimensionPolarity.HUMAN_POSITIVE
+
+    def human_contribution(self) -> float:
+        """Return this dimension's score on the human scale (0=AI, 100=human).
+
+        AI_RISK metrics are inverted here — the only place inversion happens.
+        Pass gates and composite scoring both call this method, eliminating
+        the possibility of one applying inversion and the other not.
+        """
+        if self.polarity == DimensionPolarity.AI_RISK:
+            return 100.0 - self.score
+        return self.score
+
+    def needs_improvement(self, threshold: float = 60.0) -> bool:
+        """Return True if this dimension is dragging the human score below threshold.
+
+        Pass gates call this instead of raw score comparisons so that the
+        polarity of the metric is never their concern.
+        """
+        return self.human_contribution() < threshold
 
 
 class AIDetectionResult(BaseModel):

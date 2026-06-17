@@ -5,3 +5,57 @@ __pycache__/
 .venv/
 venv/
 *.egg-info/
+
+# LaTeX build artifacts\
+*.tex
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+*.nav
+*.snm
+*.vrb
+*.idx
+*.ind
+*.ilg
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.glsdefs
+*.nlg
+*.nlo
+*.nls
+*.ptc
+*.maf
+*.mtc
+*.mtc0
+
+# LaTeX output files
+*.pdf
+*.dvi
+*.ps
+*.eps
+
+# LaTeX editor files
+*.bak
+*.sav
+*.tmp
+*.swp
+*~
+
+# Humanised output files
+*_humanised.tex

@@ -202,8 +202,22 @@ class LLMRewriter:
                     if attempt_num < len(self._BACKOFF):
                         log.warning("429 rate limit hit — will retry")
                         continue
-                    log.warning("429 rate limit — all retries exhausted")
-                    return ""
+                    log.warning("429 rate limit — all retries exhausted. Falling back to Ollama (qwen2.5:14b)")
+                    try:
+                        provider = "ollama"
+                        self._config.model = "qwen2.5:14b"
+                        import ollama
+                        num_predict = max(len(original_text.split()) * 3, 1024) if original_text else 4096
+                        response = ollama.chat(
+                            model=self._config.model,
+                            messages=messages,
+                            options={"temperature": temp, "num_predict": num_predict},
+                        )
+                        result = response["message"]["content"].strip()
+                        return result
+                    except Exception as fallback_exc:
+                        log.error("Fallback to Ollama failed: %s", fallback_exc)
+                        return ""
 
                 resp.raise_for_status()
                 result = resp.json()["choices"][0]["message"]["content"].strip()
@@ -218,6 +232,22 @@ class LLMRewriter:
                 if exc.response is not None and exc.response.status_code == 429:
                     if attempt_num < len(self._BACKOFF):
                         continue
+                    log.warning("429 rate limit — all retries exhausted. Falling back to Ollama (qwen2.5:14b)")
+                    try:
+                        provider = "ollama"
+                        self._config.model = "qwen2.5:14b"
+                        import ollama
+                        num_predict = max(len(original_text.split()) * 3, 1024) if original_text else 4096
+                        response = ollama.chat(
+                            model=self._config.model,
+                            messages=messages,
+                            options={"temperature": temp, "num_predict": num_predict},
+                        )
+                        result = response["message"]["content"].strip()
+                        return result
+                    except Exception as fallback_exc:
+                        log.error("Fallback to Ollama failed: %s", fallback_exc)
+                        return ""
                 log.warning("LLM call failed: %s", exc)
                 return ""
             except Exception as exc:

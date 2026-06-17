@@ -7,6 +7,7 @@ from q1_engine.models import ContentType, Section, StageResult
 from q1_engine.utils.logging_setup import get_logger
 from q1_engine.config import PipelineConfig
 from q1_engine.engines.stealth.translators import google_translate, niutrans_translate
+from q1_engine.engines.antigravity import _pre_scrub
 
 log = get_logger("pass4")
 
@@ -22,36 +23,21 @@ class Pass4UltraNinja:
         """Run the 4-step translation chain on a text block."""
         niutrans_key = self._config.apis.niutrans_api_key
         if not niutrans_key:
-            log.warning("Niutrans API key not set, skipping Pass 4 Ultra Ninja.")
+            log.info("Niutrans API key not set, falling back to Google Translate for FI -> EN.")
+
+        # Step 1: EN -> ZH
+        try:
+            step1_zh = google_translate(text, source="en", target="zh-CN")
+        except Exception as e:
+            log.warning(f"Google translate failed (EN->ZH): {e}")
             return text
 
-        system_msg = "你是一个专业的文案改写专家,精通多语言本地化。"
-        
-        # Step 1: EN -> ZH
-        prompt_zh = f"翻译为中文，去掉 AI 味道，拟人化改写，只输出结果：\n{text}"
-        step1_zh = await self._llm._call_llm(
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": prompt_zh}
-            ],
-            temperature=1.3,
-            original_text=text
-        )
-        if not step1_zh: return text
-
         # Step 2: ZH -> JA
-        prompt_ja = f"翻译为日语，去掉 AI 味道，拟人化改写，只输出结果：\n{step1_zh}"
-        step2_ja = await self._llm._call_llm(
-            messages=[
-                {"role": "system", "content": system_msg},
-                {"role": "user", "content": f"翻译为日语，去掉 AI 味道，拟人化改写，只输出结果：\n{text}"},
-                {"role": "assistant", "content": step1_zh},
-                {"role": "user", "content": prompt_ja}
-            ],
-            temperature=1.3,
-            original_text=step1_zh
-        )
-        if not step2_ja: return text
+        try:
+            step2_ja = google_translate(step1_zh, source="zh-CN", target="ja")
+        except Exception as e:
+            log.warning(f"Google translate failed (ZH->JA): {e}")
+            return text
 
         # Step 3: JA -> FI
         try:
@@ -62,10 +48,13 @@ class Pass4UltraNinja:
 
         # Step 4: FI -> EN
         try:
-            step4_en = niutrans_translate(step3_fi, source="fi", target="en", api_key=niutrans_key)
+            if niutrans_key:
+                step4_en = niutrans_translate(step3_fi, source="fi", target="en", api_key=niutrans_key)
+            else:
+                step4_en = google_translate(step3_fi, source="fi", target="en")
             return step4_en
         except Exception as e:
-            log.warning(f"Niutrans translate failed: {e}")
+            log.warning(f"Final translation step failed: {e}")
             return text
 
     async def run(self, sections: list[Section]) -> StageResult:
@@ -81,8 +70,11 @@ class Pass4UltraNinja:
                 if not text.strip() or len(text.split()) < 10:
                     continue
                 
+                # Deterministically wipe AI vocab/RLHF phrases first (0 tokens)
+                scrubbed_text, _ = _pre_scrub(text)
+
                 # Execute translation chain
-                result = await self._translation_chain(text)
+                result = await self._translation_chain(scrubbed_text)
                 if result and result != text:
                     block.rewritten_text = result
                     blocks_processed += 1

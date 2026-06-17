@@ -264,14 +264,30 @@ def _post_scrub(text: str) -> str:
 def _chunk_by_paragraph(text: str, max_words: int = 500) -> list[str]:
     """Split text into chunks by paragraph boundaries, targeting max_words."""
     paragraphs = [p.strip() for p in text.split("\n\n") if p.strip()]
+    
+    refined_paragraphs = []
+    for p in paragraphs:
+        if len(p.split()) > max_words:
+            refined_paragraphs.extend([l.strip() for l in p.split("\n") if l.strip()])
+        else:
+            refined_paragraphs.append(p)
+
     chunks: list[str] = []
     current: list[str] = []
     current_words = 0
 
-    for para in paragraphs:
+    for para in refined_paragraphs:
         para_words = len(para.split())
-        if current_words + para_words > max_words and current:
-            chunks.append("\n\n".join(current))
+        if para_words > max_words:
+            if current:
+                chunks.append("\n".join(current))
+                current = []
+                current_words = 0
+            words = para.split()
+            for i in range(0, len(words), max_words):
+                chunks.append(" ".join(words[i:i+max_words]))
+        elif current_words + para_words > max_words and current:
+            chunks.append("\n".join(current))
             current = [para]
             current_words = para_words
         else:
@@ -279,7 +295,7 @@ def _chunk_by_paragraph(text: str, max_words: int = 500) -> list[str]:
             current_words += para_words
 
     if current:
-        chunks.append("\n\n".join(current))
+        chunks.append("\n".join(current))
     return chunks if chunks else [text]
 
 
@@ -358,6 +374,8 @@ class AntigravityHumanizer:
                 },
                 {"role": "user", "content": prompt},
             ]
+            
+            log.info("  Processing Chunk %d/%d (%d words)...", i + 1, len(chunks), len(chunk.split()))
 
             result = await self._llm._call_llm(
                 messages,

@@ -1,3 +1,4 @@
+README.md
 pyproject.toml
 src/q1_engine/__init__.py
 src/q1_engine/config.py
@@ -13,10 +14,22 @@ src/q1_engine/analyzers/scientific_content.py
 src/q1_engine/analyzers/structure.py
 src/q1_engine/engines/__init__.py
 src/q1_engine/engines/academic_style.py
+src/q1_engine/engines/antigravity.py
 src/q1_engine/engines/grammar.py
 src/q1_engine/engines/llm_rewriter.py
 src/q1_engine/engines/readability_optimizer.py
 src/q1_engine/engines/redundancy_remover.py
+src/q1_engine/engines/stages/__init__.py
+src/q1_engine/engines/stages/stage1_deconstructor.py
+src/q1_engine/engines/stages/stage2_fingerprint_scrub.py
+src/q1_engine/engines/stages/stage6_technical_hardening.py
+src/q1_engine/engines/stages/stage7_citation_auth.py
+src/q1_engine/engines/stages/stage8_assembly.py
+src/q1_engine/engines/stealth/pass1_light_scrub.py
+src/q1_engine/engines/stealth/pass2_burstiness.py
+src/q1_engine/engines/stealth/pass3_ninja.py
+src/q1_engine/engines/stealth/pass4_ultra_ninja.py
+src/q1_engine/engines/stealth/translators.py
 src/q1_engine/parsers/__init__.py
 src/q1_engine/parsers/content_classifier.py
 src/q1_engine/parsers/latex_parser.py
@@ -26,6 +39,8 @@ src/q1_engine/pipeline/orchestrator.py
 src/q1_engine/reconstruction/__init__.py
 src/q1_engine/reconstruction/reconstructor.py
 src/q1_engine/scoring/__init__.py
+src/q1_engine/scoring/ai_detection_scorer.py
+src/q1_engine/scoring/humanisation_scorer.py
 src/q1_engine/scoring/reviewer_simulation.py
 src/q1_engine/utils/__init__.py
 src/q1_engine/utils/api_client.py

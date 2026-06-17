@@ -5,7 +5,7 @@ import asyncio
 import sys
 from pathlib import Path
 
-from q1_engine.models import PaperType, VoiceProfile
+from q1_engine.models import DimensionName, PaperType, VoiceProfile
 from q1_engine.pipeline.orchestrator import Q1Pipeline
 from q1_engine.utils.logging_setup import setup_logging
 
@@ -115,14 +115,11 @@ def main():
             print("\nHumanisation Results:")
             print(f"   AI Patterns:   {h.ai_patterns_before} -> {h.ai_patterns_after} ({h.ai_patterns_removed_pct:.0f}% removed)")
             print(f"   Human Score:   {h.before.human_score:.1f} -> {h.after.human_score:.1f}/100  (Grade: {h.after.grade})")
-            def get_dim_score(res, name):
-                for d in res.dimensions:
-                    if d.name.lower() == name.lower():
-                        return d.score
-                return 0.0
+            def _dim(res, key: DimensionName) -> float:
+                return next((d.score for d in res.dimensions if d.name == key), 0.0)
 
-            print(f"   Burstiness:    {get_dim_score(h.after, 'burstiness'):.1f}/100")
-            print(f"   Vocabulary:    {get_dim_score(h.after, 'vocabulary_entropy'):.1f}/100")
+            print(f"   Burstiness:    {_dim(h.after, DimensionName.BURSTINESS):.1f}/100")
+            print(f"   Vocabulary:    {_dim(h.after, DimensionName.VOCAB_DIVERSITY):.1f}/100")
             print(f"   Q1 Readiness:  {h.q1_writing_readiness:.1f}%  ({h.humanisation_grade})")
 
             if h.remaining_suggestions:

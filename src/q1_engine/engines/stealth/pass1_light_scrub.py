@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from q1_engine.engines.llm_rewriter import LLMRewriter
-from q1_engine.models import ContentType, Section, StageResult
+from q1_engine.models import ContentType, DimensionName, Section, StageResult
 from q1_engine.scoring.ai_detection_scorer import AIDetectionScorer
 from q1_engine.utils.logging_setup import get_logger
 
@@ -18,22 +18,20 @@ class Pass1LightScrub:
         self._scorer = AIDetectionScorer()
 
     def _block_needs_scrub(self, text: str) -> bool:
-        """Check if block needs Pass 1 (Score between 60 and 80, or high perplexity)."""
+        """Return True if this block needs Pass 1 (Signal A / C / F work).
+
+        Delegates all polarity logic to DimensionScore.needs_improvement().
+        The gate never needs to know whether a metric is AI_RISK or HUMAN_POSITIVE.
+        """
         result = self._scorer.score(text)
-        
-        # If it's already perfect, skip
         if result.human_score >= 80.0:
             return False
-            
-        # Check specific signals that Pass 1 fixes
-        s_p = next((d for d in result.dimensions if "Perplexity" in d.name), None)
-        s_t = next((d for d in result.dimensions if "Transition Frequency" in d.name), None)
-        s_ai = next((d for d in result.dimensions if "AI Phrase Density" in d.name), None)
-        
-        if (s_p and s_p.score < 80.0) or (s_t and s_t.score < 80.0) or (s_ai and s_ai.score < 80.0):
-            return True
-            
-        return False
+        dims = {d.name: d for d in result.dimensions}
+        return (
+            dims[DimensionName.PERPLEXITY].needs_improvement(threshold=60.0)
+            or dims[DimensionName.TRANSITION_FREQUENCY].needs_improvement(threshold=60.0)
+            or dims[DimensionName.AI_PHRASE_DENSITY].needs_improvement(threshold=60.0)
+        )
 
     async def run(self, sections: list[Section]) -> StageResult:
         """Apply Pass 1 ONLY to blocks that fail Signals A, C, or F."""
